@@ -13,7 +13,21 @@ RAIZ = Path(__file__).resolve().parents[2]
 log = logging.getLogger("app")
 
 METODOS = {"mobilenet_v3_large": "MobileNetV3-Large (CNN)", "resnet18": "ResNet-18 (CNN)",
-           "classico": "Clássico (LBP / forma + SVM)"}
+           "convnext_tiny": "ConvNeXt-Tiny (CNN)", "classico": "Clássico (LBP / forma + SVM)"}
+
+
+def metodos_disponiveis(modo: str) -> list[str]:
+    """Só oferece um método se houver pesos para o(s) modo(s) escolhido(s)."""
+    modos = ["casca", "folha"] if modo == "casca_folha" else [modo]
+    return [m for m in METODOS if all(_tem_pesos(m, x) for x in modos)]
+
+
+def _tem_pesos(metodo: str, modo: str) -> bool:
+    try:
+        servico.caminho_pesos(metodo, modo)
+        return True
+    except servico.PesosAusentes:
+        return False
 MODOS = {"casca": "Casca", "folha": "Folha", "casca_folha": "Casca + folha"}
 
 
@@ -49,12 +63,21 @@ def tradutor():
     return Tradutor()
 
 
+def _metodo_do_modo() -> None:
+    """Ao trocar de modo, seleciona o método padrão daquele modo (config.yaml: metodo_padrao)."""
+    st.session_state["metodo"] = st.session_state["metodo_padrao"].get(st.session_state["modo"],
+                                                                       st.session_state["metodo"])
+
+
 def barra_lateral() -> dict:
     iniciar_estado()
     s = st.sidebar
     s.header("Parâmetros")
-    s.radio("Modo", list(MODOS), format_func=MODOS.get, key="modo")
-    s.selectbox("Método", list(METODOS), format_func=METODOS.get, key="metodo")
+    s.radio("Modo", list(MODOS), format_func=MODOS.get, key="modo", on_change=_metodo_do_modo)
+    opcoes = metodos_disponiveis(st.session_state["modo"]) or list(METODOS)
+    if st.session_state["metodo"] not in opcoes:  # ex.: ConvNeXt escolhida e modo trocado para folha
+        st.session_state["metodo"] = opcoes[0]
+    s.selectbox("Método", opcoes, format_func=METODOS.get, key="metodo")
     s.slider("Limiar de confiança", 0.0, 1.0, step=0.05, key="limiar_confianca",
              help="Abaixo deste valor o resultado é 'inconclusivo' e pode ir para revisão manual.")
     s.slider("Top-k exibido", 1, 5, key="top_k")

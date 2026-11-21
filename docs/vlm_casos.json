@@ -1,0 +1,202 @@
+[
+  {
+    "id": "F01",
+    "imagem": "casca/oak.jpg",
+    "prompt": "answer en Is there a tree trunk or tree bark in this image?",
+    "esperado": "yes",
+    "resposta": "yes",
+    "traducao": "sim",
+    "ms": 940,
+    "classificacao": "correta"
+  },
+  {
+    "id": "F02",
+    "imagem": "casca/beech.jpg",
+    "prompt": "answer en Is there a tree trunk or tree bark in this image?",
+    "esperado": "yes",
+    "resposta": "yes",
+    "traducao": "sim",
+    "ms": 252,
+    "classificacao": "correta"
+  },
+  {
+    "id": "F03",
+    "imagem": "casca/pine.jpg",
+    "prompt": "answer en Is there a tree trunk or tree bark in this image?",
+    "esperado": "yes",
+    "resposta": "yes",
+    "traducao": "sim",
+    "ms": 246,
+    "classificacao": "correta"
+  },
+  {
+    "id": "F04",
+    "imagem": "casca/birch.jpg",
+    "prompt": "answer en Is there a tree trunk or tree bark in this image?",
+    "esperado": "yes",
+    "resposta": "yes",
+    "traducao": "sim",
+    "ms": 241,
+    "classificacao": "correta"
+  },
+  {
+    "id": "F05",
+    "imagem": "folha/oak.jpg",
+    "prompt": "answer en Is there a tree trunk or tree bark in this image?",
+    "esperado": "yes (revisado)",
+    "resposta": "yes",
+    "traducao": "sim",
+    "ms": 249,
+    "classificacao": "correta"
+  },
+  {
+    "id": "F06",
+    "imagem": "folha/ginkgo_biloba.jpg",
+    "prompt": "answer en Is there a tree trunk or tree bark in this image?",
+    "esperado": "yes (revisado)",
+    "resposta": "yes",
+    "traducao": "sim",
+    "ms": 264,
+    "classificacao": "correta"
+  },
+  {
+    "id": "F07",
+    "imagem": "folha/linden.jpg",
+    "prompt": "answer en Is there a leaf or a plant in this image?",
+    "esperado": "yes",
+    "resposta": "yes",
+    "traducao": "sim",
+    "ms": 255,
+    "classificacao": "correta"
+  },
+  {
+    "id": "F08",
+    "imagem": "folha/hornbeam.jpg",
+    "prompt": "answer en Is there a leaf or a plant in this image?",
+    "esperado": "yes",
+    "resposta": "yes",
+    "traducao": "sim",
+    "ms": 247,
+    "classificacao": "correta"
+  },
+  {
+    "id": "F09",
+    "imagem": "folha/spruce.jpg",
+    "prompt": "answer en Is there a leaf or a plant in this image?",
+    "esperado": "yes",
+    "resposta": "yes",
+    "traducao": "sim",
+    "ms": 247,
+    "classificacao": "correta"
+  },
+  {
+    "id": "F10",
+    "imagem": "SINTETICA",
+    "prompt": "answer en Is there a leaf or a plant in this image?",
+    "esperado": "no",
+    "resposta": "no",
+    "traducao": "não",
+    "ms": 245,
+    "classificacao": "correta"
+  },
+  {
+    "id": "F11",
+    "imagem": "SINTETICA",
+    "prompt": "answer en Is there a tree trunk or tree bark in this image?",
+    "esperado": "no",
+    "resposta": "no",
+    "traducao": "não",
+    "ms": 246,
+    "classificacao": "correta"
+  },
+  {
+    "id": "F12",
+    "imagem": "casca/spruce.jpg",
+    "prompt": "answer en Is this a photo of a leaf?",
+    "esperado": "no",
+    "resposta": "no",
+    "traducao": "não",
+    "ms": 246,
+    "classificacao": "correta"
+  },
+  {
+    "id": "A01",
+    "imagem": "casca/oak.jpg",
+    "prompt": "caption en",
+    "esperado": null,
+    "resposta": "In this image we can see the bark of a tree.",
+    "traducao": "Nesta imagem podemos ver a casca de uma árvore.",
+    "ms": 930,
+    "classificacao": "correta"
+  },
+  {
+    "id": "A02",
+    "imagem": "folha/chestnut.jpg",
+    "prompt": "caption en",
+    "esperado": null,
+    "resposta": "In this image we can see a plant.",
+    "traducao": "Nesta imagem podemos ver uma planta.",
+    "ms": 744,
+    "classificacao": "incompleta"
+  },
+  {
+    "id": "A03",
+    "imagem": "folha/horse_chestnut.jpg",
+    "prompt": "answer en Describe the shape, edge and color of the leaf.",
+    "esperado": null,
+    "resposta": "green",
+    "traducao": "verde",
+    "ms": 252,
+    "classificacao": "incompleta"
+  },
+  {
+    "id": "A04",
+    "imagem": "folha/ginkgo_biloba.jpg",
+    "prompt": "answer en Describe the shape, edge and color of the leaf.",
+    "esperado": null,
+    "resposta": "green",
+    "traducao": "verde",
+    "ms": 244,
+    "classificacao": "incompleta"
+  },
+  {
+    "id": "A05",
+    "imagem": "casca/birch.jpg",
+    "prompt": "answer en What color is the bark?",
+    "esperado": null,
+    "resposta": "white",
+    "traducao": "branco",
+    "ms": 247,
+    "classificacao": "correta"
+  },
+  {
+    "id": "A06",
+    "imagem": "folha/alder.jpg",
+    "prompt": "answer en How many leaves are visible?",
+    "esperado": null,
+    "resposta": "2",
+    "traducao": "2",
+    "ms": 245,
+    "classificacao": "incorreta"
+  },
+  {
+    "id": "A07",
+    "imagem": "casca/linden.jpg",
+    "prompt": "answer en What tree species is this?",
+    "esperado": null,
+    "resposta": "oak",
+    "traducao": "carvalho",
+    "ms": 244,
+    "classificacao": "incorreta"
+  },
+  {
+    "id": "A08",
+    "imagem": "SINTETICA",
+    "prompt": "caption en",
+    "esperado": null,
+    "resposta": "a blue square and a brown circle with the words teste 123",
+    "traducao": "um quadrado azul e um círculo marrom com as palavras teste 123",
+    "ms": 1142,
+    "classificacao": "correta"
+  }
+]

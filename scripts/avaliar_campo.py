@@ -24,7 +24,7 @@ def main() -> None:
     y = np.array([c for _, c in itens])
     rot = list(range(len(CLASSES)))
     saida = {"n": len(itens), "fonte": "GBIF, Pl@ntNet observations, fotos marcadas como bark", "metodos": {}}
-    for metodo in ("mobilenet_v3_large", "resnet18", "classico"):
+    for metodo in ("mobilenet_v3_large", "resnet18", "convnext_tiny", "classico"):
         m = servico.carregar(metodo, "casca")
         prob = np.stack([servico.classificar(m, metodo, "casca", im, 224, 3.0)["prob"] for im in imgs])
         pred = prob.argmax(1)

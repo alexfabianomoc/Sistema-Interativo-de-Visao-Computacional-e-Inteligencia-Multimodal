@@ -1,0 +1,37 @@
+{
+  "pasta_drive": null,
+  "arquivos": {
+    "classico_casca.joblib": {
+      "bytes": 3242381,
+      "sha256": "267909f0bdd45cc45593854098367da9f5d52e12aa3589c2609aeff011adc08e"
+    },
+    "classico_folha.joblib": {
+      "bytes": 5898285,
+      "sha256": "cc039c94e5727330d14b6b1dbf81c1bb7c0480c515090eafc5d2c1fb0d807742"
+    },
+    "convnext_tiny_casca.pt": {
+      "bytes": 111383494,
+      "sha256": "a9bdc0bf04d102a088ef69c734aec602255cab2a82e3f883cca8b79f86bd04a8"
+    },
+    "convnext_tiny_folha.pt": {
+      "bytes": 111383494,
+      "sha256": "63d80382b8ea7011ae2c73c5e3154ba8a569aeefcfdef7116fa6417e34ed0d96"
+    },
+    "mobilenet_v3_large_casca.pt": {
+      "bytes": 17074754,
+      "sha256": "3255530352c03d8da508956a489057aad9302b72455dfbaa29d802a0d5e4f79d"
+    },
+    "mobilenet_v3_large_folha.pt": {
+      "bytes": 17074754,
+      "sha256": "341606240032201dc96e1e72266b320aa06cdb8811ed2d455c2554e3c6def786"
+    },
+    "resnet18_casca.pt": {
+      "bytes": 44809470,
+      "sha256": "31f1222863c37b63132e98963c4e309495b4edbc1b2ad0968109d34f476e062e"
+    },
+    "resnet18_folha.pt": {
+      "bytes": 44809470,
+      "sha256": "2cf6f7313205af6fd644fbb3d4e00bfe94ccf4268bbd87e86acef0e49ed79b2f"
+    }
+  }
+}

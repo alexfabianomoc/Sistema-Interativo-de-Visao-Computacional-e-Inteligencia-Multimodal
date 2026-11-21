@@ -1,4 +1,4 @@
-"""Avalia o uso combinado casca + folha (fusão tardia) com MobileNetV3.
+"""Avalia o uso combinado casca + folha (fusão tardia) com ConvNeXt-Tiny (método padrão).
 
 As bases não têm fotos da mesma árvore, então cada foto de folha do teste é pareada com uma foto de
 casca de teste da MESMA espécie, sorteada com semente fixa (limitação registrada no README).
@@ -20,7 +20,7 @@ from src.metrics import dados  # noqa: E402
 from src.models import servico  # noqa: E402
 from src.preprocessing.transforms import ler_arquivo  # noqa: E402
 
-METODO = "mobilenet_v3_large"
+METODO = "convnext_tiny"
 
 
 def probs(modelo, modo, itens):
@@ -52,7 +52,7 @@ def main() -> None:
                        "Só folha": round(float(a_f), 4), "Casca + folha": round(float(a_u), 4)})
         print(tabela[-1])
     nota = ("Pares montados com fotos de casca e de folha da mesma espécie, de árvores diferentes "
-            "(as bases não têm a mesma árvore). Fusão: produto das probabilidades da MobileNetV3.")
+            "(as bases não têm a mesma árvore). Fusão: produto das probabilidades da ConvNeXt-Tiny.")
     (RAIZ / "docs" / "metricas" / "fusao.json").write_text(
         json.dumps({"tabela": tabela, "nota": nota}, ensure_ascii=False, indent=2), encoding="utf-8")
 

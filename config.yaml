@@ -1,6 +1,10 @@
 # Valores iniciais dos parâmetros da interface (o botão "Restaurar padrão" volta a eles).
 modo: casca                 # casca | folha | casca_folha
-metodo: mobilenet_v3_large  # mobilenet_v3_large | resnet18 | classico
+metodo: convnext_tiny       # método inicial do modo inicial
+metodo_padrao:              # método escolhido automaticamente ao trocar de modo
+  casca: convnext_tiny
+  folha: convnext_tiny
+  casca_folha: convnext_tiny
 limiar_confianca: 0.60      # abaixo disso o resultado é "inconclusivo" e vai para revisão manual
 tamanho_patch: 224          # px no recorte reduzido (modo casca)
 clahe_casca: 3.0            # intensidade do CLAHE (0 desliga)

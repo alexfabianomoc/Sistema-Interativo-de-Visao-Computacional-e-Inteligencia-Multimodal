@@ -1,4 +1,4 @@
-"""CNNs pré-treinadas no ImageNet com ajuste fino (MobileNetV3-Large e ResNet-18) e a inferência
+"""CNNs pré-treinadas no ImageNet com ajuste fino (ConvNeXt-Tiny, MobileNetV3-Large e ResNet-18) e a inferência
 de cada modo: casca = voto médio de patches; folha = imagem inteira + 5 recortes."""
 from __future__ import annotations
 
@@ -14,7 +14,8 @@ from torchvision import models
 
 from src.preprocessing import transforms as T
 
-ARQUITETURAS = ("mobilenet_v3_large", "resnet18")
+ARQUITETURAS = ("mobilenet_v3_large", "resnet18", "convnext_tiny")
+LR_MAXIMA = {"mobilenet_v3_large": 1e-3, "resnet18": 1e-3, "convnext_tiny": 3e-4}  # ConvNeXt pede taxa menor
 CLAHE_PADRAO = {"casca": 3.0, "folha": 1.5}
 LADO = 224
 
@@ -30,6 +31,9 @@ def criar(arquitetura: str, n_classes: int, pretreinada: bool = True) -> nn.Modu
     elif arquitetura == "resnet18":
         m = models.resnet18(weights="IMAGENET1K_V1" if pretreinada else None)
         m.fc = nn.Linear(m.fc.in_features, n_classes)
+    elif arquitetura == "convnext_tiny":
+        m = models.convnext_tiny(weights="IMAGENET1K_V1" if pretreinada else None)
+        m.classifier[2] = nn.Linear(m.classifier[2].in_features, n_classes)
     else:
         raise ValueError(f"arquitetura desconhecida: {arquitetura}")
     return m
@@ -37,6 +41,8 @@ def criar(arquitetura: str, n_classes: int, pretreinada: bool = True) -> nn.Modu
 
 def camada_gradcam(m: nn.Module, arquitetura: str) -> nn.Module:
     """Última camada convolucional, usada pelo Grad-CAM."""
+    if arquitetura == "convnext_tiny":
+        return m.features[-1][-1]  # último bloco ConvNeXt do estágio 4 (saída 7×7)
     return m.features[-1] if arquitetura == "mobilenet_v3_large" else m.layer4[-1]
 
 

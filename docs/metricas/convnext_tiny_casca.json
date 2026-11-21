@@ -1,0 +1,332 @@
+{
+  "modo": "casca",
+  "metodo": "convnext_tiny",
+  "dispositivo": "cuda",
+  "dados_treino": "TRUNK12 + GBIF",
+  "n": {
+    "train": 1788,
+    "val": 325,
+    "test": 59
+  },
+  "epocas": 20,
+  "melhor_epoca": 16,
+  "f1_macro_val": 0.8166,
+  "acuracia": 1.0,
+  "acuracia_top3": 1.0,
+  "f1_macro": 1.0,
+  "tempo_ms_por_imagem_mediana": 124.1,
+  "matriz_confusao": [
+    [
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      6
+    ]
+  ],
+  "teste_campo": {
+    "acuracia": 0.7059,
+    "acuracia_top3": 0.8787,
+    "f1_macro": 0.6536,
+    "tempo_ms_por_imagem_mediana": 16.9,
+    "n": 272
+  },
+  "tempo_treino_s": 732.9,
+  "classes": [
+    "alder",
+    "beech",
+    "birch",
+    "chestnut",
+    "ginkgo biloba",
+    "hornbeam",
+    "horse chestnut",
+    "linden",
+    "oak",
+    "oriental plane",
+    "pine",
+    "spruce"
+  ],
+  "historico": [
+    {
+      "epoca": 1,
+      "perda": 2.5988,
+      "f1_val": 0.369,
+      "acc_val": 0.4308
+    },
+    {
+      "epoca": 2,
+      "perda": 2.0293,
+      "f1_val": 0.5131,
+      "acc_val": 0.5477
+    },
+    {
+      "epoca": 3,
+      "perda": 1.7766,
+      "f1_val": 0.5717,
+      "acc_val": 0.5354
+    },
+    {
+      "epoca": 4,
+      "perda": 1.6506,
+      "f1_val": 0.6759,
+      "acc_val": 0.6615
+    },
+    {
+      "epoca": 5,
+      "perda": 1.5187,
+      "f1_val": 0.7534,
+      "acc_val": 0.7323
+    },
+    {
+      "epoca": 6,
+      "perda": 1.366,
+      "f1_val": 0.7852,
+      "acc_val": 0.76
+    },
+    {
+      "epoca": 7,
+      "perda": 1.264,
+      "f1_val": 0.7404,
+      "acc_val": 0.7477
+    },
+    {
+      "epoca": 8,
+      "perda": 1.1984,
+      "f1_val": 0.752,
+      "acc_val": 0.7508
+    },
+    {
+      "epoca": 9,
+      "perda": 1.1596,
+      "f1_val": 0.7549,
+      "acc_val": 0.7538
+    },
+    {
+      "epoca": 10,
+      "perda": 1.0907,
+      "f1_val": 0.7776,
+      "acc_val": 0.7631
+    },
+    {
+      "epoca": 11,
+      "perda": 1.0738,
+      "f1_val": 0.8095,
+      "acc_val": 0.8
+    },
+    {
+      "epoca": 12,
+      "perda": 0.9981,
+      "f1_val": 0.7932,
+      "acc_val": 0.7723
+    },
+    {
+      "epoca": 13,
+      "perda": 0.9816,
+      "f1_val": 0.789,
+      "acc_val": 0.7877
+    },
+    {
+      "epoca": 14,
+      "perda": 0.9511,
+      "f1_val": 0.794,
+      "acc_val": 0.7877
+    },
+    {
+      "epoca": 15,
+      "perda": 0.9273,
+      "f1_val": 0.7917,
+      "acc_val": 0.7877
+    },
+    {
+      "epoca": 16,
+      "perda": 0.9133,
+      "f1_val": 0.8166,
+      "acc_val": 0.8062
+    },
+    {
+      "epoca": 17,
+      "perda": 0.9042,
+      "f1_val": 0.8095,
+      "acc_val": 0.8154
+    },
+    {
+      "epoca": 18,
+      "perda": 0.8997,
+      "f1_val": 0.8102,
+      "acc_val": 0.8154
+    },
+    {
+      "epoca": 19,
+      "perda": 0.902,
+      "f1_val": 0.8099,
+      "acc_val": 0.8185
+    },
+    {
+      "epoca": 20,
+      "perda": 0.8912,
+      "f1_val": 0.8099,
+      "acc_val": 0.8185
+    }
+  ]
+}

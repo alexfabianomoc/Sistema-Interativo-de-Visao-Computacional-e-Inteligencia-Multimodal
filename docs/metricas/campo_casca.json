@@ -16,6 +16,13 @@
       "confianca_media": 0.4871,
       "fracao_inconclusivo_limiar_0.6": 0.6875
     },
+    "convnext_tiny": {
+      "acuracia": 0.7059,
+      "acuracia_top3": 0.8787,
+      "f1_macro": 0.6536,
+      "confianca_media": 0.5609,
+      "fracao_inconclusivo_limiar_0.6": 0.5404
+    },
     "classico": {
       "acuracia": 0.2757,
       "acuracia_top3": 0.5147,

@@ -26,15 +26,17 @@ def _antes_depois() -> None:
         return
     a = json.loads(antes.read_text(encoding="utf-8"))["metodos"]
     d = json.loads(depois.read_text(encoding="utf-8"))
+    metodos = list(dict.fromkeys([*d["metodos"], *a]))
     ta = {m: json.loads((PASTA / "antes" / f"{m}_casca.json").read_text(encoding="utf-8"))
-          for m in a if (PASTA / "antes" / f"{m}_casca.json").exists()}
+          for m in metodos if (PASTA / "antes" / f"{m}_casca.json").exists()}
     td = {m: json.loads((PASTA / f"{m}_casca.json").read_text(encoding="utf-8"))
-          for m in a if (PASTA / f"{m}_casca.json").exists()}
+          for m in metodos if (PASTA / f"{m}_casca.json").exists()}
     linhas = [{"Método": METODOS.get(m, m),
                "TRUNK12 antes": ta.get(m, {}).get("acuracia"), "TRUNK12 depois": td.get(m, {}).get("acuracia"),
-               "Campo antes": a[m]["acuracia"], "Campo depois": d["metodos"].get(m, {}).get("acuracia"),
+               "Campo antes": a.get(m, {}).get("acuracia"), "Campo depois": d["metodos"].get(m, {}).get("acuracia"),
+               "Top-3 no campo (depois)": d["metodos"].get(m, {}).get("acuracia_top3"),
                "Inconclusivos no campo (depois)": d["metodos"].get(m, {}).get("fracao_inconclusivo_limiar_0.6")}
-              for m in a]
+              for m in metodos]
     st.subheader("Casca: antes e depois de treinar com fotos de campo")
     fmt = {c: "{:.1%}" for c in linhas[0] if c != "Método"}
     st.dataframe(pd.DataFrame(linhas).style.format(fmt, na_rep="–"), hide_index=True, use_container_width=True)
@@ -51,7 +53,7 @@ def pagina() -> None:
     if not res:
         st.info("Nenhuma métrica em docs/metricas/. Rode os scripts de treino.")
         return
-    nome = {"mobilenet_v3_large": METODOS["mobilenet_v3_large"], "resnet18": METODOS["resnet18"],
+    nome = {**{k: v for k, v in METODOS.items() if k != "classico"},
             "LBP + cor + SVM": "Clássico: LBP + cor + SVM", "Hu + forma + cor + SVM": "Clássico: forma + cor + SVM"}
     tabela = pd.DataFrame([{
         "Modo": r["modo"].capitalize(), "Método": nome.get(r["metodo"], r["metodo"]),

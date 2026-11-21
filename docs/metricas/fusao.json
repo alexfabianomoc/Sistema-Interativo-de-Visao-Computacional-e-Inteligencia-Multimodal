@@ -4,16 +4,16 @@
       "Casca de": "TRUNK12 (teste)",
       "Pares": 518,
       "Só casca": 1.0,
-      "Só folha": 0.9614,
-      "Casca + folha": 0.9981
+      "Só folha": 0.971,
+      "Casca + folha": 1.0
     },
     {
       "Casca de": "Fotos de campo (GBIF)",
       "Pares": 518,
-      "Só casca": 0.6911,
-      "Só folha": 0.9614,
-      "Casca + folha": 0.9807
+      "Só casca": 0.7008,
+      "Só folha": 0.971,
+      "Casca + folha": 0.9903
     }
   ],
-  "nota": "Pares montados com fotos de casca e de folha da mesma espécie, de árvores diferentes (as bases não têm a mesma árvore). Fusão: produto das probabilidades da MobileNetV3."
+  "nota": "Pares montados com fotos de casca e de folha da mesma espécie, de árvores diferentes (as bases não têm a mesma árvore). Fusão: produto das probabilidades da ConvNeXt-Tiny."
 }

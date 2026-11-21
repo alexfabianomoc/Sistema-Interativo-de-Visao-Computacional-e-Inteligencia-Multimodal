@@ -94,7 +94,7 @@ def main() -> None:
     perda = nn.CrossEntropyLoss(weight=pesos.to(disp), label_smoothing=0.1)
     opt = torch.optim.AdamW(modelo.parameters(), lr=3e-4, weight_decay=1e-4)
     passos = epocas * len(dl)
-    sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=1e-3, total_steps=passos, pct_start=0.15)
+    sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=cnn.LR_MAXIMA[a.arquitetura], total_steps=passos, pct_start=0.15)
     escala = torch.amp.GradScaler(enabled=disp.type == "cuda")
 
     clf = cnn.Classificador(modelo, a.arquitetura, a.modo, dados.CLASSES, cnn.CLAHE_PADRAO[a.modo], disp)
