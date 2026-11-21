@@ -1,0 +1,37 @@
+# Ambiente Python
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Bases de dados (extraídas dos zips por scripts/preparar_dados.py; nunca versionar)
+data/
+*.zip
+
+# Pesos de modelos (ficam em models/ no computador do autor, com espelho no Google Drive)
+models/
+*.pt
+*.pth
+*.safetensors
+*.bin
+*.joblib
+
+# Cache do Hugging Face (PaliGemma)
+hf_cache/
+
+# Revisões manuais reais e logs (a pasta fica no Git, o conteúdo não)
+revisoes/*.csv
+logs/
+*.log
+
+# Segredos e configurações locais
+.env
+.streamlit/secrets.toml
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
