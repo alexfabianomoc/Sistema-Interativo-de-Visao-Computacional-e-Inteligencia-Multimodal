@@ -20,3 +20,5 @@ transformers==5.23.0
 accelerate==1.16.0
 bitsandbytes==0.50.2
 huggingface_hub==2.4.0
+sentencepiece==0.2.0  # 0.2.3 falha no Windows com caminho acentuado
+sacremoses==0.2.0
