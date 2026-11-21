@@ -10,7 +10,9 @@ RAIZ = Path(__file__).resolve().parents[2]
 DATA = RAIZ / "data"
 SEMENTE = 42
 
-# Pasta do TRUNK12 -> (nome popular em português, nome científico). A mesma ordem define o índice da classe.
+# Pasta do TRUNK12 -> (nome popular em português, nome científico EXIBIDO). A mesma ordem define o índice
+# da classe. Nomes revisados em 21/11/2026 (docs/auditoria_taxonomica.md): o TRUNK12 só traz nomes
+# populares em inglês, por isso tília, carvalho e pinheiro ficam no nível de gênero ("sp.").
 ESPECIES = {
     "alder": ("Amieiro", "Alnus glutinosa"),
     "beech": ("Faia", "Fagus sylvatica"),
@@ -19,13 +21,23 @@ ESPECIES = {
     "ginkgo biloba": ("Ginkgo", "Ginkgo biloba"),
     "hornbeam": ("Carpino", "Carpinus betulus"),
     "horse chestnut": ("Castanheiro-da-índia", "Aesculus hippocastanum"),
-    "linden": ("Tília", "Tilia cordata"),
-    "oak": ("Carvalho", "Quercus robur"),
+    "linden": ("Tília", "Tilia sp."),
+    "oak": ("Carvalho", "Quercus sp."),
     "oriental plane": ("Plátano-oriental", "Platanus orientalis"),
-    "pine": ("Pinheiro", "Pinus sylvestris"),
-    "spruce": ("Abeto", "Picea abies"),
+    "pine": ("Pinheiro", "Pinus sp."),
+    "spruce": ("Abeto-da-noruega", "Picea abies"),
 }
 CLASSES = list(ESPECIES)
+
+# Espécie usada na BUSCA do GBIF para baixar as fotos de folha e de casca de campo (não muda os
+# rótulos exibidos). As fotos de tília, carvalho e pinheiro são de Tilia cordata, Quercus robur e
+# Pinus sylvestris, escolhas feitas em 20/11 sem confirmação de que sejam as espécies do TRUNK12.
+TAXON_GBIF = {
+    "alder": "Alnus glutinosa", "beech": "Fagus sylvatica", "birch": "Betula pendula",
+    "chestnut": "Castanea sativa", "ginkgo biloba": "Ginkgo biloba", "hornbeam": "Carpinus betulus",
+    "horse chestnut": "Aesculus hippocastanum", "linden": "Tilia cordata", "oak": "Quercus robur",
+    "oriental plane": "Platanus orientalis", "pine": "Pinus sylvestris", "spruce": "Picea abies",
+}
 
 
 def trunk12(val: float = 0.15, teste: float = 0.15) -> dict[str, list[tuple[Path, int]]]:

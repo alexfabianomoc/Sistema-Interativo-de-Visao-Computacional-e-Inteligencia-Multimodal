@@ -34,7 +34,8 @@ MAX_OBS_POR_ESPECIE = 4000  # observações consultadas por espécie (folhas suf
 GBIF = "https://api.gbif.org/v1"
 DATASET_PLANTNET = "7a3679ef-5582-4aaa-81f0-8c2545cafc81"  # "Pl@ntNet observations"
 
-# Pasta do TRUNK12 -> nome científico (mesmas 12 espécies nos dois modos, o que permite a fusão)
+# Pasta do TRUNK12 -> espécie usada na busca do GBIF (igual a src/metrics/dados.py: TAXON_GBIF).
+# Tília, carvalho e pinheiro: espécie escolhida em 20/11 sem confirmação; ver docs/auditoria_taxonomica.md
 ESPECIES: dict[str, str] = {
     "alder": "Alnus glutinosa",
     "beech": "Fagus sylvatica",

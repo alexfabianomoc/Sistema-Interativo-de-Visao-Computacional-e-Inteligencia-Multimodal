@@ -38,7 +38,7 @@ def main() -> None:
     rot = list(range(len(dados.CLASSES)))
     resultado = {"modelo": MODELO, "modo_uso": "zero-shot, sem treino", "conjuntos": {}}
     for orgao, modo_txt in (("casca", "bark"), ("folha", "leaf")):
-        textos = [f"a photo of the {modo_txt} of {dados.ESPECIES[c][1]}, {NOMES_EN[c]}." for c in dados.CLASSES]
+        textos = [f"a photo of the {modo_txt} of {dados.TAXON_GBIF[c]}, {NOMES_EN[c]}." for c in dados.CLASSES]
         with torch.no_grad():
             t = modelo.encode_text(tok(textos).to(disp))
             t = t / t.norm(dim=-1, keepdim=True)

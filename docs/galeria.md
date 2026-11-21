@@ -12,7 +12,7 @@ Cada cartão mostra a foto com o mapa de calor Grad-CAM da espécie prevista. Ve
 |---|---|---|
 | `casca_campo/alder/2e61d000176fb777319cbc77cd7a51883c277a5e.jpg` | Amieiro | Tília |
 | `casca_campo/oriental plane/cc5ca65b6f78b8891182bff20fa373b89188144c.jpg` | Plátano-oriental | Pinheiro |
-| `casca_campo/spruce/f0174345560f4e015ab092a43f880e97fd0d9f3e.jpg` | Abeto | Pinheiro |
+| `casca_campo/spruce/f0174345560f4e015ab092a43f880e97fd0d9f3e.jpg` | Abeto-da-noruega | Pinheiro |
 | `casca_campo/beech/53580f4a99f16fa5277a80078e9aeaed026dd88c.jpg` | Faia | Tília |
 | `casca_campo/hornbeam/0a3c05d1743d483ae2070d0bf19ba73495fe484e.jpg` | Carpino | Castanheiro |
 
