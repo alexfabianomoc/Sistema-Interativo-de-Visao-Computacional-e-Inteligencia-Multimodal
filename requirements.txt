@@ -1,6 +1,17 @@
-# Python 3.11. Versões fixas; lista completada ao longo dos marcos.
+# Python 3.11. Versões fixas.
 # GPU NVIDIA (CUDA 12.4):
 #   pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu124
-# Só CPU: troque "+cu124" por nada e use --extra-index-url https://download.pytorch.org/whl/cpu
+# Só CPU: troque "+cu124" por nada nas duas linhas do torch e use
+#   --extra-index-url https://download.pytorch.org/whl/cpu
 torch==2.6.0+cu124
 torchvision==0.21.0+cu124
+numpy==2.4.6
+opencv-python-headless==5.1.0.95
+pillow==13.0.0
+scikit-image==0.26.0
+scikit-learn==1.9.1
+pandas==3.1.1
+matplotlib==3.11.2
+PyYAML==6.0.4
+streamlit==1.67.0
+pytest==9.2.0
