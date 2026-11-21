@@ -16,7 +16,7 @@ PASTA = Path(__file__).resolve().parents[2] / "docs" / "metricas"
 
 def _carregar() -> list[dict]:
     return [json.loads(p.read_text(encoding="utf-8")) for p in sorted(PASTA.glob("*.json"))
-            if not p.name.startswith(("fusao", "campo"))]
+            if not p.name.startswith(("fusao", "campo", "bioclip"))]
 
 
 def _antes_depois() -> None:
@@ -68,6 +68,18 @@ def pagina() -> None:
                "Tempo dos clássicos: só o SVM, sem a extração de características.")
 
     _antes_depois()
+
+    bio = PASTA / "bioclip.json"
+    if bio.exists():
+        b = json.loads(bio.read_text(encoding="utf-8"))
+        st.subheader("Comparação zero-shot: BioCLIP sem treino")
+        st.dataframe(pd.DataFrame([{"Conjunto": k, "Fotos": v["n"], "Acurácia": v["acuracia"],
+                                    "Top-3": v["acuracia_top3"], "F1 macro": v["f1_macro"]}
+                                   for k, v in b["conjuntos"].items()]).style.format(
+            {"Acurácia": "{:.1%}", "Top-3": "{:.1%}", "F1 macro": "{:.3f}"}), hide_index=True)
+        st.caption("BioCLIP (imageomics/bioclip) compara a foto com textos 'a photo of the bark/leaf of <espécie>', "
+                   "sem nenhum ajuste nas nossas bases. Ele foi treinado com milhões de fotos de biodiversidade, "
+                   "possivelmente incluindo fotos da Pl@ntNet/GBIF, o que pode favorecê-lo no campo e nas folhas.")
 
     fusao = PASTA / "fusao.json"
     if fusao.exists():

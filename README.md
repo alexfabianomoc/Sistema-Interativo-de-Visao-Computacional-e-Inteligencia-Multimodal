@@ -183,6 +183,18 @@ Antes de incluir fotos de campo no treino (só TRUNK12): MobileNetV3 100% no TRU
 | TRUNK12 | 100% | 97,1% | 100% |
 | Fotos de campo | 70,1% | 97,1% | **99,0%** |
 
+### Comparação zero-shot: BioCLIP sem treino
+
+O BioCLIP (`imageomics/bioclip`, MIT) classifica comparando a foto com textos "a photo of the bark/leaf of *espécie*", sem nenhum ajuste nas nossas bases (`scripts/avaliar_bioclip.py`).
+
+| Conjunto | BioCLIP (sem treino) | ConvNeXt-Tiny ajustada |
+|---|---|---|
+| TRUNK12 (59) | 28,8% | 100% |
+| Casca de campo (272) | 47,8% | 70,6% |
+| Folhas (518) | 94,0% | 97,1% |
+
+O ajuste fino vence nos três conjuntos, com folga na casca. O BioCLIP vai mal nas fotos padronizadas de casca muito de perto (TRUNK12), que fogem das fotos comuns de biodiversidade, e quase empata nas folhas. Ressalva: ele foi treinado com milhões de fotos de biodiversidade, possivelmente incluindo fotos da Pl@ntNet/GBIF, o que pode favorecê-lo nos conjuntos do GBIF.
+
 ### Limiar "inconclusivo" (0,6) nas fotos de campo
 
 A ConvNeXt marca 54% das fotos de campo como inconclusivas; na galeria, 4 dos 5 erros de casca e 4 dos 5 de folha ficaram abaixo do limiar. O SVM clássico fica abaixo do limiar em 100% das fotos de campo, ou seja, não decide nunca. Galeria comentada de acertos e erros: `docs/galeria.md`.
@@ -210,7 +222,7 @@ As imagens do GBIF são públicas, com licença e autor registrados por foto. A 
 
 **Dados:** TRUNK12 — Švab, M. *Computer-vision-based tree trunk recognition*. Trabalho de conclusão de bacharelado (orientador: Matej Kristan), Fakulteta za računalništvo in informatiko, Univerza v Ljubljani, 2014. Disponível em https://www.vicos.si/resources/trunk12/. Affouard A, Joly A, Lombardo J, Champ J, Goëau H, Chouet M, Gresse H, Bonnet P (2025). *Pl@ntNet observations*, versão 1.9, conjunto publicado em CC BY 4.0, https://doi.org/10.15468/gtebaa, acessado via GBIF.org em 20 e 21/11/2026; fotos de voluntários da Pl@ntNet, em geral CC BY-SA; créditos por foto nos manifestos e em `data_samples/CREDITOS.csv`.
 
-**Modelos e pesos:** MobileNetV3-Large, ResNet-18 e ConvNeXt-Tiny pré-treinados no ImageNet (torchvision, BSD-3). PaliGemma 2 3B mix 224 (Google, Gemma Terms of Use). Opus-MT `opus-mt-ROMANCE-en` (Apache 2.0) e `opus-mt-tc-big-en-pt` (CC BY 4.0), Helsinki-NLP.
+**Modelos e pesos:** MobileNetV3-Large, ResNet-18 e ConvNeXt-Tiny pré-treinados no ImageNet (torchvision, BSD-3). BioCLIP (Stevens et al., *BioCLIP: A Vision Foundation Model for the Tree of Life*, CVPR 2024; imageomics/bioclip, MIT), só na comparação zero-shot. PaliGemma 2 3B mix 224 (Google, Gemma Terms of Use). Opus-MT `opus-mt-ROMANCE-en` (Apache 2.0) e `opus-mt-tc-big-en-pt` (CC BY 4.0), Helsinki-NLP.
 
 **Bibliotecas:** PyTorch, torchvision, OpenCV, NumPy, Pillow, scikit-image, scikit-learn, pandas, Streamlit, Hugging Face Transformers, bitsandbytes, accelerate, PyYAML, pytest.
 

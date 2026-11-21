@@ -1,0 +1,27 @@
+{
+  "modelo": "hf-hub:imageomics/bioclip",
+  "modo_uso": "zero-shot, sem treino",
+  "conjuntos": {
+    "TRUNK12 (teste)": {
+      "n": 59,
+      "acuracia": 0.2881,
+      "acuracia_top3": 0.678,
+      "f1_macro": 0.2536,
+      "tempo_ms_mediana": 149.2
+    },
+    "Casca de campo (GBIF)": {
+      "n": 272,
+      "acuracia": 0.4779,
+      "acuracia_top3": 0.7169,
+      "f1_macro": 0.4554,
+      "tempo_ms_mediana": 18.5
+    },
+    "Folhas (teste GBIF)": {
+      "n": 518,
+      "acuracia": 0.9402,
+      "acuracia_top3": 0.9923,
+      "f1_macro": 0.9107,
+      "tempo_ms_mediana": 18.3
+    }
+  }
+}
