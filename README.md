@@ -77,6 +77,8 @@ A aplicação abre em <http://localhost:8501>. Para testar sem câmera, use a fo
 
 Testes automáticos: `python -m pytest -q tests`.
 
+Instalação testada do zero em 21/11/2026 (clone novo, ambiente novo, pesos baixados do Drive): 14 testes passaram.
+
 ## 5. Arquitetura e pipeline
 
 ```
