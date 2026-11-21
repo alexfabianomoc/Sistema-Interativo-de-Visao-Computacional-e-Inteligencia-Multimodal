@@ -1,0 +1,68 @@
+"""Configuração, cache de modelos e barra lateral compartilhados pelas páginas."""
+from __future__ import annotations
+
+import logging
+from pathlib import Path
+
+import streamlit as st
+import yaml
+
+from src.models import servico
+
+RAIZ = Path(__file__).resolve().parents[2]
+log = logging.getLogger("app")
+
+METODOS = {"mobilenet_v3_large": "MobileNetV3-Large (CNN)", "resnet18": "ResNet-18 (CNN)",
+           "classico": "Clássico (LBP / forma + SVM)"}
+MODOS = {"casca": "Casca", "folha": "Folha", "casca_folha": "Casca + folha"}
+
+
+def padrao() -> dict:
+    with open(RAIZ / "config.yaml", encoding="utf-8") as fh:
+        return yaml.safe_load(fh)
+
+
+def iniciar_estado() -> None:
+    for k, v in padrao().items():
+        st.session_state.setdefault(k, v)
+
+
+def restaurar() -> None:
+    for k, v in padrao().items():
+        st.session_state[k] = v
+
+
+@st.cache_resource(show_spinner="Carregando modelo...")
+def modelo(metodo: str, modo: str):
+    return servico.carregar(metodo, modo)
+
+
+@st.cache_resource(show_spinner="Carregando PaliGemma 2 (cerca de 20 s na primeira vez)...")
+def vlm():
+    from src.models.vlm import PaliGemma
+    return PaliGemma()
+
+
+@st.cache_resource(show_spinner="Carregando tradutor pt ↔ en...")
+def tradutor():
+    from src.models.traducao import Tradutor
+    return Tradutor()
+
+
+def barra_lateral() -> dict:
+    iniciar_estado()
+    s = st.sidebar
+    s.header("Parâmetros")
+    s.radio("Modo", list(MODOS), format_func=MODOS.get, key="modo")
+    s.selectbox("Método", list(METODOS), format_func=METODOS.get, key="metodo")
+    s.slider("Limiar de confiança", 0.0, 1.0, step=0.05, key="limiar_confianca",
+             help="Abaixo deste valor o resultado é 'inconclusivo' e pode ir para revisão manual.")
+    s.slider("Top-k exibido", 1, 5, key="top_k")
+    with s.expander("Pré-processamento", expanded=False):
+        st.select_slider("Tamanho do patch (casca)", [160, 192, 224, 288, 320], key="tamanho_patch",
+                         help="Lado do patch na imagem reduzida; patches menores = grade mais fina.")
+        st.slider("CLAHE na casca", 0.0, 6.0, step=0.5, key="clahe_casca")
+        st.slider("CLAHE na folha", 0.0, 6.0, step=0.5, key="clahe_folha")
+    s.slider("Opacidade do mapa", 0.0, 1.0, step=0.05, key="opacidade_mapa")
+    s.button("Restaurar padrão", on_click=restaurar, use_container_width=True)
+    return {k: st.session_state[k] for k in padrao()}
