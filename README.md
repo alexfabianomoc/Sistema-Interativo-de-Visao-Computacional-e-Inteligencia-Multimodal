@@ -217,11 +217,20 @@ Treino (GPU RTX 4050): de 10 a 15 min por CNN.
 - **Teste do TRUNK12 tem só 59 fotos**, por isso 100% não significa acerto garantido.
 - **PaliGemma** descreve sempre em inglês (a tradução local resolve em parte) e pode alucinar; ver `docs/vlm_protocolo.md`.
 
-## 9. Ética e privacidade
+## 9. Trabalhos futuros
+
+**Base própria de fotos validadas por profissionais.** A revisão manual já registra a espécie confirmada, o nome e o registro (CRBio/CREA) do profissional em `revisoes/revisoes.csv`, mas ainda não forma uma base de treino. Falta:
+
+1. **Guardar a foto após a revisão.** Hoje a imagem é apagada da fila (`revisoes/fila/`) quando a revisão é registrada; sobra só a linha do CSV.
+2. **Organizar uma base própria**, por exemplo `revisoes/base/<modo>/<espécie>/`, com um manifesto por foto: espécie validada, profissional, registro, data, origem e autorização de uso.
+3. **Incluir essa base no treino**, sempre fora dos conjuntos de teste, para não inflar as métricas.
+4. **Consentimento:** antes de enviar uma foto para a fila, o usuário deve concordar com o uso da imagem para treino e pesquisa; fotos sem esse consentimento ficam só na revisão.
+
+## 10. Ética e privacidade
 
 As imagens do GBIF são públicas, com licença e autor registrados por foto. A aplicação não envia imagens para serviços externos: CNNs, PaliGemma e tradução rodam no computador do usuário. Só o recorte vai ao VLM, sem EXIF nem GPS. Fotos de drone podem ter GPS; as coordenadas ficam só na fila de revisão local. Nenhuma base é redistribuída no repositório.
 
-## 10. Fontes e créditos
+## 11. Fontes e créditos
 
 **Dados:** TRUNK12 — Švab, M. *Computer-vision-based tree trunk recognition*. Trabalho de conclusão de bacharelado (orientador: Matej Kristan), Fakulteta za računalništvo in informatiko, Univerza v Ljubljani, 2014. Disponível em https://www.vicos.si/resources/trunk12/. Affouard A, Joly A, Lombardo J, Champ J, Goëau H, Chouet M, Gresse H, Bonnet P (2025). *Pl@ntNet observations*, versão 1.9, conjunto publicado em CC BY 4.0, https://doi.org/10.15468/gtebaa, acessado via GBIF.org em 20 e 21/11/2026; fotos de voluntários da Pl@ntNet, em geral CC BY-SA; créditos por foto nos manifestos e em `data_samples/CREDITOS.csv`.
 
@@ -231,13 +240,13 @@ As imagens do GBIF são públicas, com licença e autor registrados por foto. A 
 
 **Artigos:** Cotrim e Pedrini, *Identificação de Espécies de Árvores por Imagens de Tronco Utilizando Aprendizado de Máquina Profundo*, IC-Unicamp, 2019. Ratajczak et al., *Efficient Bark Recognition in the Wild*, VISAPP 2019. Selvaraju et al., *Grad-CAM*, ICCV 2017. Belfort et al., *Classificação de espécies de árvores em imagens de cenário urbano usando CNNs com Triplet Loss*, SEMISH 2026.
 
-## 11. Uso de inteligência artificial
+## 12. Uso de inteligência artificial
 
 | Ferramenta | Finalidade | Partes afetadas | Revisão e validação |
 |---|---|---|---|
 | Claude (Anthropic), via Claude Code | Planejamento, pesquisa de bases, escrita e depuração de código, documentação | Todo o repositório | Cada etapa foi decidida pelo autor (escolha de bases, espécies, divisões, modelos, padrões); código validado por testes automáticos, execução na interface e métricas em conjuntos de teste separados |
 | PaliGemma 2 (Google) | Componente opcional da aplicação: descrição e perguntas sobre a imagem | Painel do VLM | Protocolo de 20 casos em `docs/vlm_protocolo.md` |
 
-## 12. Diário de desenvolvimento
+## 13. Diário de desenvolvimento
 
 Ver `docs/diario.md` (uma entrada por etapa, com os quatro marcos).
