@@ -75,7 +75,7 @@ class PaliGemma:
 
     def verificar(self, img: np.ndarray, modo: str) -> tuple[bool | None, Resposta]:
         """True/False se a resposta for sim/não; None se ambígua."""
-        r = self.perguntar(img, PROMPTS["tem_tronco" if modo == "casca" else "tem_folha"], 5)
+        r = self.perguntar(img, PROMPTS["tem_tronco" if modo in ("casca", "tronco_br") else "tem_folha"], 5)
         t = r.texto.lower()
         return (True if t.startswith("yes") else False if t.startswith("no") else None), r
 

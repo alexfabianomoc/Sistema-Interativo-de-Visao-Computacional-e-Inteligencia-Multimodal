@@ -35,13 +35,13 @@ class Base(Dataset):
 
     def __init__(self, itens, modo: str, treino: bool):
         self.modo, self.treino = modo, treino
-        lado_base = 2 * cnn.LADO if modo == "casca" else 320
+        lado_base = 2 * cnn.LADO if dados.e_tronco(modo) else 320
         clahe = cnn.CLAHE_PADRAO[modo]
         self.imgs = [T.clahe_l(cnn.reduzir_menor_lado(T.ler_arquivo(p), lado_base), clahe) for p, _ in itens]
         self.rotulos = [c for _, c in itens]
         geo = [v2.RandomHorizontalFlip(), v2.RandomRotation(15)]
         cor = v2.ColorJitter(0.3, 0.3, 0.2, 0.02)
-        if modo == "casca":  # textura: recorte de patch de 224 em qualquer ponto do tronco
+        if dados.e_tronco(modo):  # textura: recorte de patch de 224 em qualquer ponto do tronco
             self.aum = v2.Compose([v2.ToImage(), v2.RandomCrop(cnn.LADO), *geo, cor])
         else:  # forma da folha: recorte com variação de escala (fotos de distâncias diferentes)
             self.aum = v2.Compose([v2.ToImage(), v2.RandomResizedCrop(cnn.LADO, scale=(0.4, 1.0)), *geo, cor])
@@ -63,7 +63,7 @@ def avaliar(clf: cnn.Classificador, itens) -> dict:
     prob = np.stack(probs)
     y = np.array([c for _, c in itens])
     pred = prob.argmax(1)
-    rot = list(range(len(dados.CLASSES)))
+    rot = list(range(len(clf.classes)))
     return {"acuracia": round(accuracy_score(y, pred), 4),
             "acuracia_top3": round(top_k_accuracy_score(y, prob, k=3, labels=rot), 4),
             "f1_macro": round(f1_score(y, pred, average="macro", labels=rot, zero_division=0), 4),
@@ -73,12 +73,13 @@ def avaliar(clf: cnn.Classificador, itens) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("modo", choices=["casca", "folha"])
+    ap.add_argument("modo", choices=list(dados.TIPO))
     ap.add_argument("arquitetura", choices=cnn.ARQUITETURAS)
     ap.add_argument("--epocas", type=int, default=None)
     ap.add_argument("--lote", type=int, default=32)
     a = ap.parse_args()
     epocas = a.epocas or (40 if a.modo == "casca" else 15)
+    classes = dados.classes(a.modo)
     random.seed(SEMENTE); np.random.seed(SEMENTE); torch.manual_seed(SEMENTE)
 
     disp = cnn.dispositivo()
@@ -88,8 +89,8 @@ def main() -> None:
     print(f"{len(treino)} imagens de treino carregadas em {time.perf_counter() - t0:.0f}s; dispositivo {disp}")
     dl = DataLoader(treino, batch_size=a.lote, shuffle=True, num_workers=0, drop_last=True)
 
-    modelo = cnn.criar(a.arquitetura, len(dados.CLASSES)).to(disp)
-    contagem = np.bincount(treino.rotulos, minlength=len(dados.CLASSES))
+    modelo = cnn.criar(a.arquitetura, len(classes)).to(disp)
+    contagem = np.bincount(treino.rotulos, minlength=len(classes))
     pesos = torch.tensor(contagem.sum() / (len(contagem) * np.maximum(contagem, 1)), dtype=torch.float32)
     perda = nn.CrossEntropyLoss(weight=pesos.to(disp), label_smoothing=0.1)
     opt = torch.optim.AdamW(modelo.parameters(), lr=3e-4, weight_decay=1e-4)
@@ -97,7 +98,7 @@ def main() -> None:
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=cnn.LR_MAXIMA[a.arquitetura], total_steps=passos, pct_start=0.15)
     escala = torch.amp.GradScaler(enabled=disp.type == "cuda")
 
-    clf = cnn.Classificador(modelo, a.arquitetura, a.modo, dados.CLASSES, cnn.CLAHE_PADRAO[a.modo], disp)
+    clf = cnn.Classificador(modelo, a.arquitetura, a.modo, classes, cnn.CLAHE_PADRAO[a.modo], disp)
     saida_pt = RAIZ / "models" / f"{a.arquitetura}_{a.modo}.pt"
     saida_pt.parent.mkdir(exist_ok=True)
     melhor, historico = -1.0, []
@@ -120,7 +121,7 @@ def main() -> None:
         print(historico[-1], flush=True)
         if val["f1_macro"] > melhor:
             melhor = val["f1_macro"]
-            torch.save({"arquitetura": a.arquitetura, "modo": a.modo, "classes": dados.CLASSES,
+            torch.save({"arquitetura": a.arquitetura, "modo": a.modo, "classes": classes,
                         "clahe": cnn.CLAHE_PADRAO[a.modo], "estado": modelo.state_dict(),
                         "epoca": ep, "f1_val": melhor}, saida_pt)
     t_treino = time.perf_counter() - t_treino
@@ -137,11 +138,11 @@ def main() -> None:
         print("teste de campo:", teste["teste_campo"])
     resultado = {"modo": a.modo, "metodo": a.arquitetura, "dispositivo": str(disp),
                  "dados_treino": "TRUNK12 + GBIF" if a.modo == "casca" and len(splits["train"]) > 300 else
-                 ("TRUNK12" if a.modo == "casca" else "GBIF folhas"),
+                 ("TRUNK12" if a.modo == "casca" else "GBIF folhas" if a.modo == "folha" else "iNaturalist Brasil"),
                  "n": {k: len(v) for k, v in splits.items()}, "epocas": epocas,
                  "melhor_epoca": torch.load(saida_pt, weights_only=False)["epoca"],
                  "f1_macro_val": melhor, **teste, "tempo_treino_s": round(t_treino, 1),
-                 "classes": dados.CLASSES, "historico": historico}
+                 "classes": classes, "historico": historico}
     out = RAIZ / "docs" / "metricas"
     out.mkdir(parents=True, exist_ok=True)
     (out / f"{a.arquitetura}_{a.modo}.json").write_text(json.dumps(resultado, ensure_ascii=False, indent=2),

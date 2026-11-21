@@ -1,0 +1,39 @@
+{
+  "modo": "tronco_br",
+  "metodo": "LBP + cor + SVM",
+  "C": 10,
+  "f1_macro_val": 0.4867,
+  "n": {
+    "train": 380,
+    "val": 81,
+    "test": 100
+  },
+  "acuracia": 0.55,
+  "acuracia_top3": 1.0,
+  "f1_macro": 0.3819,
+  "tempo_extracao_s": 26.1,
+  "tempo_treino_s": 0.17,
+  "tempo_classificacao_ms_por_imagem_sem_extracao": 0.066,
+  "classes": [
+    "Paubrasilia echinata",
+    "Handroanthus",
+    "Schinus terebinthifolia"
+  ],
+  "matriz_confusao": [
+    [
+      29,
+      21,
+      0
+    ],
+    [
+      16,
+      26,
+      0
+    ],
+    [
+      6,
+      2,
+      0
+    ]
+  ]
+}

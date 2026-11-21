@@ -18,7 +18,7 @@ METODOS = {"mobilenet_v3_large": "MobileNetV3-Large (CNN)", "resnet18": "ResNet-
 
 def metodos_disponiveis(modo: str) -> list[str]:
     """Só oferece um método se houver pesos para o(s) modo(s) escolhido(s)."""
-    modos = ["casca", "folha"] if modo == "casca_folha" else [modo]
+    modos = PARES.get(modo, [modo])
     return [m for m in METODOS if all(_tem_pesos(m, x) for x in modos)]
 
 
@@ -28,7 +28,15 @@ def _tem_pesos(metodo: str, modo: str) -> bool:
         return True
     except servico.PesosAusentes:
         return False
-MODOS = {"casca": "Casca", "folha": "Folha", "casca_folha": "Casca + folha"}
+
+
+MODOS = {"tronco_br": "Tronco", "folha_br": "Folha", "tronco_folha_br": "Tronco + folha",
+         "casca": "Tronco — exóticas (TRUNK12)", "folha": "Folha — exóticas europeias",
+         "casca_folha": "Tronco + folha — exóticas"}
+# Modo combinado -> (modo do tronco, modo da folha)
+PARES = {"tronco_folha_br": ["tronco_br", "folha_br"], "casca_folha": ["casca", "folha"]}
+# Modo brasileiro -> modo de reserva para árvores exóticas
+RESERVA = {"tronco_br": "casca", "folha_br": "folha"}
 
 
 def padrao() -> dict:
@@ -75,16 +83,19 @@ def barra_lateral() -> dict:
     s.header("Parâmetros")
     s.radio("Modo", list(MODOS), format_func=MODOS.get, key="modo", on_change=_metodo_do_modo)
     opcoes = metodos_disponiveis(st.session_state["modo"]) or list(METODOS)
-    if st.session_state["metodo"] not in opcoes:  # ex.: ConvNeXt escolhida e modo trocado para folha
+    if st.session_state["metodo"] not in opcoes:  # ex.: método sem pesos para o modo escolhido
         st.session_state["metodo"] = opcoes[0]
     s.selectbox("Método", opcoes, format_func=METODOS.get, key="metodo")
     s.slider("Limiar de confiança", 0.0, 1.0, step=0.05, key="limiar_confianca",
              help="Abaixo deste valor o resultado é 'inconclusivo' e pode ir para revisão manual.")
     s.slider("Top-k exibido", 1, 5, key="top_k")
+    s.toggle("Consultar exóticas quando inconclusivo", key="reserva_exoticas",
+             help="Se o modelo brasileiro ficar abaixo do limiar, roda também o modelo do TRUNK12 (tronco) "
+                  "ou das folhas europeias e mostra o resultado como possível espécie exótica.")
     with s.expander("Pré-processamento", expanded=False):
-        st.select_slider("Tamanho do patch (casca)", [160, 192, 224, 288, 320], key="tamanho_patch",
+        st.select_slider("Tamanho do patch (tronco)", [160, 192, 224, 288, 320], key="tamanho_patch",
                          help="Lado do patch na imagem reduzida; patches menores = grade mais fina.")
-        st.slider("CLAHE na casca", 0.0, 6.0, step=0.5, key="clahe_casca")
+        st.slider("CLAHE no tronco", 0.0, 6.0, step=0.5, key="clahe_casca")
         st.slider("CLAHE na folha", 0.0, 6.0, step=0.5, key="clahe_folha")
     s.slider("Opacidade do mapa", 0.0, 1.0, step=0.05, key="opacidade_mapa")
     s.button("Restaurar padrão", on_click=restaurar, use_container_width=True)

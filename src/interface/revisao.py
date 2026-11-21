@@ -18,6 +18,7 @@ def pagina() -> None:
     if not fila:
         st.info("Nenhuma imagem aguardando revisão.")
     for item in fila:
+        cls, nomes = servico.classes(item["modo"]), servico.nomes(item["modo"])
         with st.container(border=True):
             c1, c2, c3 = st.columns([1, 1, 1.3])
             c1.image(str(revisao.FILA / f"{item['id']}.jpg"), caption="Imagem")
@@ -27,16 +28,16 @@ def pagina() -> None:
             with c3:
                 st.markdown(f"**Modo:** {item['modo']} · **Método:** {item['metodo']}")
                 st.markdown("**Top-3 do modelo:** " + ", ".join(
-                    servico.NOMES[servico.CLASSES.index(c)] for c in item["top3"]))
+                    nomes[cls.index(c)] for c in item["top3"]))
                 st.markdown(f"**Confiança:** {item['confianca']:.0%}")
                 if "lat" in item:
                     st.markdown(f"**Local:** {item['lat']}, {item['lon']}")
                 with st.form(f"f_{item['id']}"):
                     nome = st.text_input("Nome do profissional")
                     registro = st.text_input("Registro (CRBio ou CREA)", placeholder="CRBio 12345/04-D")
-                    opcoes = servico.CLASSES + [OUTRA]
-                    esc = st.selectbox("Espécie correta", opcoes, index=servico.CLASSES.index(item["previsto"]),
-                                       format_func=lambda c: c if c == OUTRA else servico.NOMES[servico.CLASSES.index(c)])
+                    opcoes = cls + [OUTRA]
+                    esc = st.selectbox("Espécie correta", opcoes, index=cls.index(item["previsto"]),
+                                       format_func=lambda c: c if c == OUTRA else nomes[cls.index(c)])
                     outra = st.text_input("Se outra, qual (nome científico)")
                     obs = st.text_area("Observação", height=70)
                     if st.form_submit_button("Registrar revisão", type="primary"):

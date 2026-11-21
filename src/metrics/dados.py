@@ -89,7 +89,61 @@ def casca_mista() -> dict[str, list[tuple[Path, int]]]:
     return {"train": t["train"] + g["train"], "val": t["val"] + g["val"], "test": t["test"]}
 
 
+# ------------------------------------------------------------------ base brasileira (iNaturalist, 21/11)
+
+# Nome aceito (classe) -> nome popular. Gênero inteiro quando o nome aceito não tem epíteto.
+POPULAR_BR = {
+    "Schinus terebinthifolia": "Aroeira-pimenteira", "Handroanthus": "Ipês",
+    "Erythrina speciosa": "Mulungu", "Spathodea campanulata": "Espatódea",
+    "Paubrasilia echinata": "Pau-brasil", "Mangifera indica": "Mangueira", "Delonix regia": "Flamboyant",
+    "Terminalia catappa": "Chapéu-de-sol", "Pleroma granulosum": "Quaresmeira", "Pachira aquatica": "Munguba",
+    "Cenostigma pluviosum": "Sibipiruna", "Bauhinia variegata": "Pata-de-vaca",
+    "Lagerstroemia indica": "Resedá", "Syzygium cumini": "Jambolão", "Peltophorum dubium": "Canafístula",
+    "Moquilea tomentosa": "Oiti", "Tipuana tipu": "Tipuana", "Libidibia ferrea": "Pau-ferro",
+}
+TRONCO_BR = ["Paubrasilia echinata", "Handroanthus", "Schinus terebinthifolia"]
+# As 10 espécies com mais fotos de folha na base baixada (scripts/baixar_inat_brasil.py dividir, 21/11)
+FOLHA_BR = ["Schinus terebinthifolia", "Handroanthus", "Paubrasilia echinata", "Terminalia catappa",
+            "Pachira aquatica", "Syzygium cumini", "Mangifera indica", "Pleroma granulosum",
+            "Cenostigma pluviosum", "Erythrina speciosa"]
+
+# Modo -> tipo de imagem ("tronco" usa patches; "folha" usa imagem inteira + 5 recortes)
+TIPO = {"casca": "tronco", "folha": "folha", "tronco_br": "tronco", "folha_br": "folha"}
+
+
+def e_tronco(modo: str) -> bool:
+    return TIPO[modo] == "tronco"
+
+
+def classes(modo: str) -> list[str]:
+    return {"casca": CLASSES, "folha": CLASSES, "tronco_br": TRONCO_BR, "folha_br": FOLHA_BR}[modo]
+
+
+def nome(modo: str, classe: str) -> tuple[str, str]:
+    """(nome popular, nome científico exibido) de uma classe."""
+    if modo in ("casca", "folha"):
+        return ESPECIES[classe]
+    cientifico = classe if " " in classe else f"{classe} sp."
+    return POPULAR_BR[classe], cientifico
+
+
+def inat_br(modo: str) -> dict[str, list[tuple[Path, int]]]:
+    """Fotos do iNaturalist no Brasil que o PaliGemma marcou como tronco ou folha, divididas por observação."""
+    manifesto = DATA / "inat_br" / "manifesto.csv"
+    if not manifesto.exists():
+        raise FileNotFoundError("Base brasileira não encontrada. Rode scripts/baixar_inat_brasil.py.")
+    cls, parte = classes(modo), TIPO[modo]
+    out: dict[str, list[tuple[Path, int]]] = {"train": [], "val": [], "test": []}
+    with open(manifesto, encoding="utf-8") as fh:
+        for l in csv.DictReader(fh):
+            if l.get("parte") == parte and l["taxon"] in cls and l.get("split"):
+                out[l["split"]].append((DATA / l["caminho"], cls.index(l["taxon"])))
+    return out
+
+
 def carregar(modo: str) -> dict[str, list[tuple[Path, int]]]:
     if modo == "casca":
         return casca_mista() if (DATA / "casca_gbif" / "manifesto.csv").exists() else trunk12()
-    return folhas()
+    if modo == "folha":
+        return folhas()
+    return inat_br(modo)

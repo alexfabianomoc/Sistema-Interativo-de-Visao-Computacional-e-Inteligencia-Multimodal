@@ -9,7 +9,7 @@ import streamlit as st
 from src.acquisition import entrada
 from src.interface import comum
 from src.interface.comum import log
-from src.metrics import revisao
+from src.metrics import dados, revisao
 from src.models import servico
 from src.preprocessing import transforms as T
 from src.visualization import desenho, gradcam
@@ -94,16 +94,18 @@ def _roi_e_rotacao(img: np.ndarray, chave: str, cfg: dict) -> np.ndarray:
 
 def _analisar(img: np.ndarray, modo: str, cfg: dict) -> dict:
     metodo = cfg["metodo"]
-    clahe = cfg["clahe_casca"] if modo == "casca" else cfg["clahe_folha"]
+    tronco = dados.e_tronco(modo)
+    clahe = cfg["clahe_casca"] if tronco else cfg["clahe_folha"]
     m = comum.modelo(metodo, modo)
-    lado = cfg["tamanho_patch"] if modo == "casca" else 224
+    lado = cfg["tamanho_patch"] if tronco else 224
     r = servico.classificar(m, metodo, modo, img, lado, clahe)
     r.update(modo=modo, metodo=metodo, img=img, clahe=clahe, lado=lado, modelo=m,
              realcada=T.clahe_l(img, clahe))
-    if modo == "folha":
+    r["classes"], r["nomes"] = servico.classes(modo), servico.nomes(modo)
+    if not tronco:
         r["mascara"], r["contorno"] = T.segmentar_folha(img)
     log.info("classificado modo=%s metodo=%s top=%s conf=%.3f ms=%.0f", modo, metodo,
-             servico.CLASSES[int(r["prob"].argmax())], r["prob"].max(), r["ms"])
+             r["classes"][int(r["prob"].argmax())], r["prob"].max(), r["ms"])
     return r
 
 
@@ -112,13 +114,15 @@ def _camadas(r: dict, cfg: dict, classe: int, chave: str) -> np.ndarray:
     eh_cnn = r["metodo"] != "classico"
     c1, c2, c3 = st.columns(3)
     usar_calor = c1.toggle("Mapa de calor (Grad-CAM)", value=eh_cnn, disabled=not eh_cnn, key=f"lc_{chave}")
-    usar_grade = c2.toggle("Grade de patches", value=eh_cnn and r["modo"] == "casca",
-                           disabled=not (eh_cnn and r["modo"] == "casca"), key=f"lg_{chave}")
-    usar_cont = c3.toggle("Contorno da folha", value=r["modo"] == "folha",
-                          disabled=r["modo"] != "folha", key=f"lf_{chave}")
+    tronco = dados.e_tronco(r["modo"])
+    usar_grade = c2.toggle("Grade de patches", value=eh_cnn and tronco,
+                           disabled=not (eh_cnn and tronco), key=f"lg_{chave}")
+    usar_cont = c3.toggle("Contorno da folha", value=not tronco, disabled=tronco, key=f"lf_{chave}")
     final = r["img"].copy()
     if usar_calor:
-        k = (chave, classe, r["lado"], r["clahe"], r["metodo"])
+        # a chave inclui a imagem e o modo: uma foto nova nunca reaproveita o mapa da anterior
+        k = (chave, r["modo"], classe, r["lado"], r["clahe"], r["metodo"], r["img"].shape,
+             float(r["img"][::16, ::16].mean()))
         if st.session_state.get(f"cam_key_{chave}") != k:
             with st.spinner("Calculando Grad-CAM..."):
                 st.session_state[f"cam_{chave}"] = gradcam.mapa_completo(r["modelo"], r["img"], r, classe,
@@ -135,34 +139,34 @@ def _camadas(r: dict, cfg: dict, classe: int, chave: str) -> np.ndarray:
 
 
 def _resultado(r: dict, cfg: dict, chave: str, coords: dict | None) -> None:
-    prob, k = r["prob"], cfg["top_k"]
+    prob, k, NOMES = r["prob"], min(cfg["top_k"], len(r["classes"])), r["nomes"]
     tops = servico.top_k(prob, k)
     melhor, conf = tops[0]
     inconclusivo = conf < cfg["limiar_confianca"]
     if inconclusivo:
         st.warning(f"**Inconclusivo**: a maior confiança ({conf:.0%}) está abaixo do limiar "
-                   f"({cfg['limiar_confianca']:.0%}). Sugestão mais provável: {servico.NOMES[melhor]}.")
+                   f"({cfg['limiar_confianca']:.0%}). Sugestão mais provável: {NOMES[melhor]}.")
     else:
-        st.success(f"**{servico.NOMES[melhor]}** com {conf:.0%} de confiança")
+        st.success(f"**{NOMES[melhor]}** com {conf:.0%} de confiança")
     st.caption(f"Tempo de classificação: {r['ms']:.0f} ms · método {comum.METODOS[r['metodo']]}")
 
     for i, p in tops:  # barras top-k
-        st.progress(float(p), text=f"{servico.NOMES[i]}: {p:.1%}")
+        st.progress(float(p), text=f"{NOMES[i]}: {p:.1%}")
 
-    classe = st.selectbox("Explicar a espécie", [i for i, _ in tops], format_func=lambda i: servico.NOMES[i],
+    classe = st.selectbox("Explicar a espécie", [i for i, _ in tops], format_func=lambda i: NOMES[i],
                           key=f"exp_{chave}", help="O mapa de calor mostra a região que levou a esta espécie.")
     final = _camadas(r, cfg, classe, chave)
     indices = sorted({i for i, _ in tops} | ({int(p.argmax()) for p in r["prob_partes"]}
                                              if r["prob_partes"] is not None else set()))
     st.image(final, caption="Resultado (camadas ativas)", width=720)
-    st.image(desenho.legenda(servico.NOMES, indices), caption="Legenda de cores por espécie", width=320)
+    st.image(desenho.legenda(NOMES, indices), caption="Legenda de cores por espécie", width=320)
 
     with st.expander("Vista comparativa: original, após CLAHE e resultado"):
         st.image(desenho.lado_a_lado([r["img"], r["realcada"], final],
                                      ["Original (recorte)", f"CLAHE {r['clahe']}", "Resultado"]))
 
     st.download_button("Baixar imagem final (PNG)",
-                       desenho.png(desenho.compor_exportacao(final, servico.NOMES, indices)),
+                       desenho.png(desenho.compor_exportacao(final, NOMES, indices)),
                        file_name=f"resultado_{r['modo']}.png", mime="image/png", key=f"dl_{chave}")
 
     if inconclusivo or st.toggle("Enviar mesmo assim para revisão manual", key=f"forcar_{chave}"):
@@ -170,8 +174,8 @@ def _resultado(r: dict, cfg: dict, chave: str, coords: dict | None) -> None:
             calor = st.session_state.get(f"cam_{chave}")
             calor_img = desenho.mapa_de_calor(r["img"], calor, 0.45) if calor is not None else None
             ident = revisao.enviar_para_fila(r["img"], calor_img, {
-                "modo": r["modo"], "metodo": r["metodo"], "previsto": servico.CLASSES[melhor],
-                "confianca": round(conf, 4), "top3": [servico.CLASSES[i] for i, _ in servico.top_k(prob, 3)],
+                "modo": r["modo"], "metodo": r["metodo"], "previsto": r["classes"][melhor],
+                "confianca": round(conf, 4), "top3": [r["classes"][i] for i, _ in servico.top_k(prob, 3)],
                 **(coords or {})})
             st.success(f"Enviado para a fila de revisão ({ident}). Veja a página Revisão.")
 
@@ -204,7 +208,7 @@ def _painel_vlm(img: np.ndarray, modo: str, chave: str) -> None:
             hist.append(_registro_vlm("Descrição", vlm.descrever(img), tr))
         if c2.button("Verificar a entrada", key=f"vv_{chave}"):
             ok, resp = vlm.verificar(img, modo)
-            alvo = "tronco ou casca" if modo == "casca" else "folha ou planta"
+            alvo = "tronco ou casca" if dados.e_tronco(modo) else "folha ou planta"
             aviso = (f"O VLM não viu {alvo} nesta imagem. Confira antes de confiar na classificação."
                      if ok is False else f"O VLM confirma: há {alvo} na imagem." if ok else
                      "Resposta ambígua do VLM.")
@@ -249,49 +253,87 @@ def _bloco(modo: str, cfg: dict, rotulo: str = "") -> tuple[dict | None, dict | 
         return None, None
 
 
+def _reserva(img: np.ndarray, modo: str, cfg: dict) -> None:
+    """Modelo brasileiro inconclusivo: consulta o modelo das exóticas (TRUNK12 / folhas europeias)."""
+    reserva = comum.RESERVA.get(modo)
+    if not reserva or not cfg["reserva_exoticas"]:
+        return
+    metodo = cfg["metodo_padrao"][reserva]
+    try:
+        m = comum.modelo(metodo, reserva)
+    except servico.PesosAusentes:
+        return
+    clahe = cfg["clahe_casca"] if dados.e_tronco(modo) else cfg["clahe_folha"]
+    r = servico.classificar(m, metodo, reserva, img, 224, clahe)
+    i, p = servico.top_k(r["prob"], 1)[0]
+    nome = servico.nomes(reserva)[i]
+    base = "TRUNK12" if reserva == "casca" else "folhas europeias do GBIF"
+    if p >= cfg["limiar_confianca"]:
+        st.info(f"**Possível espécie exótica:** {nome} ({p:.0%}, modelo de reserva treinado com {base}). "
+                "Confirme na revisão manual.")
+    else:
+        st.caption(f"O modelo de exóticas ({base}) também ficou abaixo do limiar: {nome}, {p:.0%}.")
+
+
 def pagina() -> None:
     cfg = comum.barra_lateral()
     st.title("Identificação de espécies de árvores")
-    st.caption("Sugestão com grau de confiança, não identificação botânica definitiva. "
-               "12 espécies europeias (TRUNK12).")
     modo = cfg["modo"]
+    if modo in ("casca", "folha", "casca_folha"):
+        st.caption("Reserva para árvores exóticas: 12 espécies europeias (TRUNK12 e folhas do GBIF). "
+                   "Sugestão com grau de confiança, não identificação botânica definitiva.")
+    else:
+        st.caption("Árvores urbanas brasileiras (fotos do iNaturalist no Brasil). Sugestão com grau de "
+                   "confiança, não identificação botânica definitiva.")
 
-    if modo in ("casca", "folha"):
+    if modo not in comum.PARES:
         r, coords = _bloco(modo, cfg)
         if r:
             _resultado(r, cfg, modo, coords)
+            if r["prob"].max() < cfg["limiar_confianca"]:
+                _reserva(r["img"], modo, cfg)
             _painel_vlm(r["img"], modo, modo)
         return
 
-    st.info("Envie uma foto da casca e uma da folha da mesma árvore. A aplicação combina as duas "
+    modo_t, modo_f = comum.PARES[modo]
+    st.info("Envie uma foto do tronco e uma da folha da mesma árvore. A aplicação combina as duas "
             "classificações multiplicando as probabilidades (fusão tardia).")
     col_c, col_f = st.columns(2)
     with col_c:
-        st.subheader("Casca")
-        rc, coords = _bloco("casca", cfg, "da casca")
+        st.subheader("Tronco")
+        rc, coords = _bloco(modo_t, cfg, "do tronco")
     with col_f:
         st.subheader("Folha")
-        rf, _ = _bloco("folha", cfg, "da folha")
+        rf, _ = _bloco(modo_f, cfg, "da folha")
     if not (rc and rf):
         return
-    prob = servico.fusao(rc["prob"], rf["prob"])
+    comuns, prob = servico.fusao_por_classe(rc["prob"], rc["classes"], rf["prob"], rf["classes"])
     st.subheader("Resultado conjunto")
+    if not comuns:
+        st.warning("Tronco e folha não têm espécies em comum; não há resultado conjunto.")
+        return
+    fora = [n for c, n in zip(rf["classes"], rf["nomes"]) if c not in comuns]
+    if fora:
+        st.caption(f"A fusão só vale para as {len(comuns)} espécies que existem nos dois modos. "
+                   f"Fora dela: {', '.join(fora)}.")
+    nome_de = dict(zip(rf["classes"], rf["nomes"]))
+    tops = servico.top_k(prob, min(cfg["top_k"], len(comuns)))
     tabela = pd.DataFrame({
-        "Espécie": [servico.NOMES[i] for i, _ in servico.top_k(prob, cfg["top_k"])],
-        "Casca": [rc["prob"][i] for i, _ in servico.top_k(prob, cfg["top_k"])],
-        "Folha": [rf["prob"][i] for i, _ in servico.top_k(prob, cfg["top_k"])],
-        "Conjunto": [p for _, p in servico.top_k(prob, cfg["top_k"])],
+        "Espécie": [nome_de[comuns[i]] for i, _ in tops],
+        "Tronco": [rc["prob"][rc["classes"].index(comuns[i])] for i, _ in tops],
+        "Folha": [rf["prob"][rf["classes"].index(comuns[i])] for i, _ in tops],
+        "Conjunto": [p for _, p in tops],
     })
-    st.dataframe(tabela.style.format({c: "{:.0%}" for c in ("Casca", "Folha", "Conjunto")}),
+    st.dataframe(tabela.style.format({c: "{:.0%}" for c in ("Tronco", "Folha", "Conjunto")}),
                  hide_index=True, use_container_width=True)
-    melhor, conf = servico.top_k(prob, 1)[0]
-    (st.warning if conf < cfg["limiar_confianca"] else st.success)(
-        f"Conjunto: **{servico.NOMES[melhor]}** com {conf:.0%}"
-        + (" (inconclusivo)" if conf < cfg["limiar_confianca"] else ""))
-    if servico.CLASSES[int(rc["prob"].argmax())] != servico.CLASSES[int(rf["prob"].argmax())]:
-        st.caption("Casca e folha discordam individualmente; confira se as fotos são da mesma árvore.")
-    t1, t2 = st.tabs(["Detalhes da casca", "Detalhes da folha"])
+    melhor, conf = tops[0]
+    inconcl = conf < cfg["limiar_confianca"]
+    (st.warning if inconcl else st.success)(
+        f"Conjunto: **{nome_de[comuns[melhor]]}** com {conf:.0%}" + (" (inconclusivo)" if inconcl else ""))
+    if rc["classes"][int(rc["prob"].argmax())] != rf["classes"][int(rf["prob"].argmax())]:
+        st.caption("Tronco e folha discordam individualmente; confira se as fotos são da mesma árvore.")
+    t1, t2 = st.tabs(["Detalhes do tronco", "Detalhes da folha"])
     with t1:
-        _resultado(rc, cfg, "casca", coords)
+        _resultado(rc, cfg, modo_t, coords)
     with t2:
-        _resultado(rf, cfg, "folha", None)
+        _resultado(rf, cfg, modo_f, None)

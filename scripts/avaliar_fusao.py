@@ -57,5 +57,39 @@ def main() -> None:
         json.dumps({"tabela": tabela, "nota": nota}, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def main_br() -> None:
+    """Base brasileira: tronco (3 classes) + folha (10 classes), fusão nas 3 espécies em comum.
+    Pares da MESMA árvore quando a observação do iNaturalist tem foto de tronco e de folha no teste."""
+    import csv
+    linhas = list(csv.DictReader(open(dados.DATA / "inat_br" / "manifesto.csv", encoding="utf-8")))
+    comuns = [c for c in dados.TRONCO_BR if c in dados.FOLHA_BR]
+    teste = [l for l in linhas if l.get("split") == "test" and l["taxon"] in comuns]
+    por_obs = defaultdict(lambda: {"tronco": [], "folha": []})
+    for l in teste:
+        if l["parte"] in ("tronco", "folha"):
+            por_obs[l["obs"]][l["parte"]].append(l)
+    pares = [(v["tronco"][0], v["folha"][0]) for v in por_obs.values() if v["tronco"] and v["folha"]]
+    mt, mf = servico.carregar(METODO, "tronco_br"), servico.carregar(METODO, "folha_br")
+    acertos = {"tronco": 0, "folha": 0, "fusao": 0}
+    for lt, lf in pares:
+        pt = servico.classificar(mt, METODO, "tronco_br", ler_arquivo(dados.DATA / lt["caminho"]), 224, 3.0)["prob"]
+        pf = servico.classificar(mf, METODO, "folha_br", ler_arquivo(dados.DATA / lf["caminho"]), 224, 1.5)["prob"]
+        cls, pu = servico.fusao_por_classe(pt, dados.TRONCO_BR, pf, dados.FOLHA_BR)
+        real = lt["taxon"]
+        acertos["tronco"] += dados.TRONCO_BR[int(pt.argmax())] == real
+        acertos["folha"] += dados.FOLHA_BR[int(pf.argmax())] == real  # folha escolhe entre as 10
+        acertos["fusao"] += cls[int(pu.argmax())] == real
+    n = max(len(pares), 1)
+    tabela = [{"Casca de": "Mesma árvore (observação do iNaturalist com tronco e folha)", "Pares": len(pares),
+               "Só casca": round(acertos["tronco"] / n, 4), "Só folha": round(acertos["folha"] / n, 4),
+               "Casca + folha": round(acertos["fusao"] / n, 4)}]
+    print(tabela)
+    nota = (f"Pares da mesma árvore, nas {len(comuns)} espécies com modelo de tronco "
+            f"({', '.join(dados.POPULAR_BR[c] for c in comuns)}). 'Só folha' escolhe entre as 10 espécies de "
+            "folha; a fusão considera só as espécies em comum. ConvNeXt-Tiny.")
+    (RAIZ / "docs" / "metricas" / "fusao_br.json").write_text(
+        json.dumps({"tabela": tabela, "nota": nota}, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 if __name__ == "__main__":
-    main()
+    main_br() if "--br" in sys.argv else main()

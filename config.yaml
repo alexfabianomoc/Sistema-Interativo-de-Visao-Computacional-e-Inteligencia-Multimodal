@@ -1,13 +1,17 @@
 # Valores iniciais dos parâmetros da interface (o botão "Restaurar padrão" volta a eles).
-modo: casca                 # casca | folha | casca_folha
+modo: tronco_br             # tronco_br | folha_br | tronco_folha_br | casca | folha | casca_folha
 metodo: convnext_tiny       # método inicial do modo inicial
 metodo_padrao:              # método escolhido automaticamente ao trocar de modo
+  tronco_br: convnext_tiny
+  folha_br: convnext_tiny
+  tronco_folha_br: convnext_tiny
   casca: convnext_tiny
   folha: convnext_tiny
   casca_folha: convnext_tiny
+reserva_exoticas: true      # abaixo do limiar, consulta também o modelo das exóticas (TRUNK12 / folhas europeias)
 limiar_confianca: 0.60      # abaixo disso o resultado é "inconclusivo" e vai para revisão manual
-tamanho_patch: 224          # px no recorte reduzido (modo casca)
-clahe_casca: 3.0            # intensidade do CLAHE (0 desliga)
+tamanho_patch: 224          # px no recorte reduzido (modo tronco)
+clahe_casca: 3.0            # intensidade do CLAHE no tronco (0 desliga)
 clahe_folha: 1.5
 opacidade_mapa: 0.45
 top_k: 3

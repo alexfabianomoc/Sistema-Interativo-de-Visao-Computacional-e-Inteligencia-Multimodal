@@ -9,9 +9,11 @@ import streamlit as st
 
 from src.interface.comum import METODOS
 from src.metrics import revisao
-from src.metrics.dados import ESPECIES
+from src.metrics import dados
 
 PASTA = Path(__file__).resolve().parents[2] / "docs" / "metricas"
+ROTULO_MODO = {"tronco_br": "Tronco (Brasil)", "folha_br": "Folha (Brasil)", "casca": "Tronco (exóticas, TRUNK12)",
+               "folha": "Folha (exóticas europeias)"}
 
 
 def _carregar() -> list[dict]:
@@ -56,7 +58,7 @@ def pagina() -> None:
     nome = {**{k: v for k, v in METODOS.items() if k != "classico"},
             "LBP + cor + SVM": "Clássico: LBP + cor + SVM", "Hu + forma + cor + SVM": "Clássico: forma + cor + SVM"}
     tabela = pd.DataFrame([{
-        "Modo": r["modo"].capitalize(), "Método": nome.get(r["metodo"], r["metodo"]),
+        "Modo": ROTULO_MODO.get(r["modo"], r["modo"]), "Método": nome.get(r["metodo"], r["metodo"]),
         "Acurácia": r["acuracia"], "Top-3": r["acuracia_top3"], "F1 macro": r["f1_macro"],
         "ms/imagem": r.get("tempo_ms_por_imagem_mediana", r.get("tempo_classificacao_ms_por_imagem_sem_extracao")),
         "Treino (s)": r.get("tempo_treino_s"),
@@ -81,19 +83,22 @@ def pagina() -> None:
                    "sem nenhum ajuste nas nossas bases. Ele foi treinado com milhões de fotos de biodiversidade, "
                    "possivelmente incluindo fotos da Pl@ntNet/GBIF, o que pode favorecê-lo no campo e nas folhas.")
 
-    fusao = PASTA / "fusao.json"
-    if fusao.exists():
-        f = json.loads(fusao.read_text(encoding="utf-8"))
-        st.subheader("Uso combinado casca + folha")
-        st.dataframe(pd.DataFrame(f["tabela"]).style.format(
-            {c: "{:.1%}" for c in ("Só casca", "Só folha", "Casca + folha")}), hide_index=True)
-        st.caption(f["nota"])
+    for arq, titulo in (("fusao_br.json", "Tronco + folha (Brasil)"), ("fusao.json", "Tronco + folha (exóticas)")):
+        fusao = PASTA / arq
+        if fusao.exists():
+            f = json.loads(fusao.read_text(encoding="utf-8"))
+            st.subheader(f"Uso combinado: {titulo}")
+            tab = pd.DataFrame(f["tabela"]).rename(columns={"Casca de": "Tronco de", "Só casca": "Só tronco",
+                                                            "Casca + folha": "Tronco + folha"})
+            st.dataframe(tab.style.format({c: "{:.1%}" for c in ("Só tronco", "Só folha", "Tronco + folha")}),
+                         hide_index=True)
+            st.caption(f["nota"])
 
     st.subheader("Matriz de confusão")
     escolha = st.selectbox("Modelo", range(len(res)),
                            format_func=lambda i: f"{res[i]['modo']} · {nome.get(res[i]['metodo'], res[i]['metodo'])}")
     r = res[escolha]
-    rot = [ESPECIES[c][0] for c in r["classes"]]
+    rot = [dados.nome(r["modo"], c)[0] for c in r["classes"]]
     mc = pd.DataFrame(r["matriz_confusao"], index=rot, columns=rot)
     st.dataframe(mc.style.background_gradient(cmap="Greens", axis=None), use_container_width=True)
     st.caption("Linhas: espécie real · colunas: espécie prevista.")

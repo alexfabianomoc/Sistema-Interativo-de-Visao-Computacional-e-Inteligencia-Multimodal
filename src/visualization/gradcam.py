@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import torch
 
+from src.metrics.dados import TIPO
 from src.models import cnn
 from src.preprocessing import transforms as T
 
@@ -37,7 +38,7 @@ def mapa_completo(clf: cnn.Classificador, img: np.ndarray, resultado: dict, clas
     entradas, posicoes = clf.entradas(img, lado_patch, clahe)
     for ent, (x, y, s) in zip(entradas, posicoes):
         cam = gradcam(clf, ent, classe)
-        if clf.modo == "casca":  # patch quadrado: escala direta
+        if TIPO[clf.modo] == "tronco":  # patch quadrado: escala direta
             reg = cv2.resize(cam, (s, s))
             x1, y1 = min(w, x + s), min(h, y + s)
             soma[y:y1, x:x1] += reg[: y1 - y, : x1 - x]

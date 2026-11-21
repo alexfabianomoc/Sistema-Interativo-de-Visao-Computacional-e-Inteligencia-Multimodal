@@ -1,0 +1,227 @@
+{
+  "modo": "folha_br",
+  "metodo": "mobilenet_v3_large",
+  "dispositivo": "cuda",
+  "dados_treino": "iNaturalist Brasil",
+  "n": {
+    "train": 2726,
+    "val": 539,
+    "test": 574
+  },
+  "epocas": 12,
+  "melhor_epoca": 9,
+  "f1_macro_val": 0.7486,
+  "acuracia": 0.831,
+  "acuracia_top3": 0.9564,
+  "f1_macro": 0.7647,
+  "tempo_ms_por_imagem_mediana": 24.9,
+  "matriz_confusao": [
+    [
+      201,
+      3,
+      1,
+      2,
+      1,
+      3,
+      4,
+      2,
+      1,
+      3
+    ],
+    [
+      5,
+      76,
+      0,
+      8,
+      5,
+      0,
+      2,
+      3,
+      1,
+      3
+    ],
+    [
+      2,
+      3,
+      44,
+      0,
+      0,
+      0,
+      1,
+      0,
+      3,
+      0
+    ],
+    [
+      0,
+      8,
+      0,
+      41,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      1,
+      0,
+      2,
+      34,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      2,
+      0,
+      0,
+      0,
+      26,
+      3,
+      1,
+      0,
+      0
+    ],
+    [
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      18,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      18,
+      0,
+      0
+    ],
+    [
+      0,
+      7,
+      8,
+      1,
+      1,
+      0,
+      0,
+      0,
+      6,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      13
+    ]
+  ],
+  "tempo_treino_s": 458.9,
+  "classes": [
+    "Schinus terebinthifolia",
+    "Handroanthus",
+    "Paubrasilia echinata",
+    "Terminalia catappa",
+    "Pachira aquatica",
+    "Syzygium cumini",
+    "Mangifera indica",
+    "Pleroma granulosum",
+    "Cenostigma pluviosum",
+    "Erythrina speciosa"
+  ],
+  "historico": [
+    {
+      "epoca": 1,
+      "perda": 2.2818,
+      "f1_val": 0.3553,
+      "acc_val": 0.4972
+    },
+    {
+      "epoca": 2,
+      "perda": 1.7641,
+      "f1_val": 0.3873,
+      "acc_val": 0.5325
+    },
+    {
+      "epoca": 3,
+      "perda": 1.5488,
+      "f1_val": 0.4833,
+      "acc_val": 0.6104
+    },
+    {
+      "epoca": 4,
+      "perda": 1.3426,
+      "f1_val": 0.6277,
+      "acc_val": 0.7477
+    },
+    {
+      "epoca": 5,
+      "perda": 1.2435,
+      "f1_val": 0.5679,
+      "acc_val": 0.6122
+    },
+    {
+      "epoca": 6,
+      "perda": 1.1298,
+      "f1_val": 0.5867,
+      "acc_val": 0.6735
+    },
+    {
+      "epoca": 7,
+      "perda": 1.041,
+      "f1_val": 0.6877,
+      "acc_val": 0.7755
+    },
+    {
+      "epoca": 8,
+      "perda": 0.982,
+      "f1_val": 0.7158,
+      "acc_val": 0.8089
+    },
+    {
+      "epoca": 9,
+      "perda": 0.9652,
+      "f1_val": 0.7486,
+      "acc_val": 0.8497
+    },
+    {
+      "epoca": 10,
+      "perda": 0.9488,
+      "f1_val": 0.747,
+      "acc_val": 0.8423
+    },
+    {
+      "epoca": 11,
+      "perda": 0.9333,
+      "f1_val": 0.7272,
+      "acc_val": 0.8367
+    },
+    {
+      "epoca": 12,
+      "perda": 0.9318,
+      "f1_val": 0.736,
+      "acc_val": 0.8442
+    }
+  ]
+}

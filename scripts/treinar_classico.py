@@ -26,7 +26,7 @@ from src.preprocessing.transforms import ler_arquivo  # noqa: E402
 def _extrair(args: tuple[str, str]) -> np.ndarray:
     caminho, modo = args
     img = ler_arquivo(caminho)
-    return classico.caracteristicas_casca(img) if modo == "casca" else classico.caracteristicas_folha(img)
+    return classico.caracteristicas_casca(img) if dados.e_tronco(modo) else classico.caracteristicas_folha(img)
 
 
 def matriz(itens, modo):
@@ -37,7 +37,7 @@ def matriz(itens, modo):
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("modo", choices=["casca", "folha"])
+    ap.add_argument("modo", choices=list(dados.TIPO))
     modo = ap.parse_args().modo
     splits = dados.carregar(modo)
     t0 = time.perf_counter()
@@ -58,9 +58,9 @@ def main() -> None:
     prob = modelo.predict_proba(xte)
     t_pred = (time.perf_counter() - t0) / len(yte) * 1000
     pred = modelo.classes_[prob.argmax(1)]
-    rotulos = list(range(len(dados.CLASSES)))
+    rotulos = list(range(len(dados.classes(modo))))
     resultado = {
-        "modo": modo, "metodo": "LBP + cor + SVM" if modo == "casca" else "Hu + forma + cor + SVM",
+        "modo": modo, "metodo": "LBP + cor + SVM" if dados.e_tronco(modo) else "Hu + forma + cor + SVM",
         "C": c, "f1_macro_val": round(melhor[0], 4),
         "n": {k: len(v) for k, v in splits.items()},
         "acuracia": round(accuracy_score(yte, pred), 4),
@@ -68,7 +68,7 @@ def main() -> None:
         "f1_macro": round(f1_score(yte, pred, average="macro", labels=rotulos, zero_division=0), 4),
         "tempo_extracao_s": round(t_extr, 1), "tempo_treino_s": round(t_treino, 2),
         "tempo_classificacao_ms_por_imagem_sem_extracao": round(t_pred, 3),
-        "classes": dados.CLASSES,
+        "classes": dados.classes(modo),
         "matriz_confusao": confusion_matrix(yte, pred, labels=rotulos).tolist(),
     }
     (RAIZ / "models").mkdir(exist_ok=True)

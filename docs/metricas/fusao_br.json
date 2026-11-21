@@ -1,0 +1,12 @@
+{
+  "tabela": [
+    {
+      "Casca de": "Mesma árvore (observação do iNaturalist com tronco e folha)",
+      "Pares": 35,
+      "Só casca": 0.7143,
+      "Só folha": 0.7714,
+      "Casca + folha": 0.9429
+    }
+  ],
+  "nota": "Pares da mesma árvore, nas 3 espécies com modelo de tronco (Pau-brasil, Ipês, Aroeira-pimenteira). 'Só folha' escolhe entre as 10 espécies de folha; a fusão considera só as espécies em comum. ConvNeXt-Tiny."
+}

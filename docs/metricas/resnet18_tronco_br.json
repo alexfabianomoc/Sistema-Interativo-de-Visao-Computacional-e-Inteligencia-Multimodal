@@ -1,0 +1,223 @@
+{
+  "modo": "tronco_br",
+  "metodo": "resnet18",
+  "dispositivo": "cuda",
+  "dados_treino": "iNaturalist Brasil",
+  "n": {
+    "train": 380,
+    "val": 81,
+    "test": 100
+  },
+  "epocas": 30,
+  "melhor_epoca": 8,
+  "f1_macro_val": 0.6747,
+  "acuracia": 0.61,
+  "acuracia_top3": 1.0,
+  "f1_macro": 0.5554,
+  "tempo_ms_por_imagem_mediana": 12.2,
+  "matriz_confusao": [
+    [
+      33,
+      8,
+      9
+    ],
+    [
+      15,
+      23,
+      4
+    ],
+    [
+      2,
+      1,
+      5
+    ]
+  ],
+  "tempo_treino_s": 107.5,
+  "classes": [
+    "Paubrasilia echinata",
+    "Handroanthus",
+    "Schinus terebinthifolia"
+  ],
+  "historico": [
+    {
+      "epoca": 1,
+      "perda": 1.1508,
+      "f1_val": 0.5591,
+      "acc_val": 0.716
+    },
+    {
+      "epoca": 2,
+      "perda": 0.9656,
+      "f1_val": 0.605,
+      "acc_val": 0.7037
+    },
+    {
+      "epoca": 3,
+      "perda": 1.0252,
+      "f1_val": 0.5208,
+      "acc_val": 0.5309
+    },
+    {
+      "epoca": 4,
+      "perda": 1.218,
+      "f1_val": 0.2246,
+      "acc_val": 0.2469
+    },
+    {
+      "epoca": 5,
+      "perda": 1.0644,
+      "f1_val": 0.3214,
+      "acc_val": 0.3827
+    },
+    {
+      "epoca": 6,
+      "perda": 1.0258,
+      "f1_val": 0.2379,
+      "acc_val": 0.2469
+    },
+    {
+      "epoca": 7,
+      "perda": 0.9886,
+      "f1_val": 0.4225,
+      "acc_val": 0.4938
+    },
+    {
+      "epoca": 8,
+      "perda": 0.974,
+      "f1_val": 0.6747,
+      "acc_val": 0.6914
+    },
+    {
+      "epoca": 9,
+      "perda": 0.9644,
+      "f1_val": 0.476,
+      "acc_val": 0.4938
+    },
+    {
+      "epoca": 10,
+      "perda": 0.9165,
+      "f1_val": 0.5034,
+      "acc_val": 0.5309
+    },
+    {
+      "epoca": 11,
+      "perda": 0.9034,
+      "f1_val": 0.4595,
+      "acc_val": 0.5679
+    },
+    {
+      "epoca": 12,
+      "perda": 0.9378,
+      "f1_val": 0.2352,
+      "acc_val": 0.2346
+    },
+    {
+      "epoca": 13,
+      "perda": 0.8679,
+      "f1_val": 0.5873,
+      "acc_val": 0.6296
+    },
+    {
+      "epoca": 14,
+      "perda": 0.8644,
+      "f1_val": 0.3142,
+      "acc_val": 0.3333
+    },
+    {
+      "epoca": 15,
+      "perda": 0.7977,
+      "f1_val": 0.3247,
+      "acc_val": 0.321
+    },
+    {
+      "epoca": 16,
+      "perda": 0.8133,
+      "f1_val": 0.2633,
+      "acc_val": 0.4074
+    },
+    {
+      "epoca": 17,
+      "perda": 0.7718,
+      "f1_val": 0.3711,
+      "acc_val": 0.4321
+    },
+    {
+      "epoca": 18,
+      "perda": 0.7128,
+      "f1_val": 0.4873,
+      "acc_val": 0.5062
+    },
+    {
+      "epoca": 19,
+      "perda": 0.6942,
+      "f1_val": 0.5411,
+      "acc_val": 0.5556
+    },
+    {
+      "epoca": 20,
+      "perda": 0.6931,
+      "f1_val": 0.6292,
+      "acc_val": 0.6667
+    },
+    {
+      "epoca": 21,
+      "perda": 0.6398,
+      "f1_val": 0.5701,
+      "acc_val": 0.6173
+    },
+    {
+      "epoca": 22,
+      "perda": 0.6852,
+      "f1_val": 0.6474,
+      "acc_val": 0.6914
+    },
+    {
+      "epoca": 23,
+      "perda": 0.6147,
+      "f1_val": 0.5919,
+      "acc_val": 0.6173
+    },
+    {
+      "epoca": 24,
+      "perda": 0.6437,
+      "f1_val": 0.6193,
+      "acc_val": 0.6667
+    },
+    {
+      "epoca": 25,
+      "perda": 0.6029,
+      "f1_val": 0.6043,
+      "acc_val": 0.642
+    },
+    {
+      "epoca": 26,
+      "perda": 0.593,
+      "f1_val": 0.599,
+      "acc_val": 0.6296
+    },
+    {
+      "epoca": 27,
+      "perda": 0.575,
+      "f1_val": 0.5673,
+      "acc_val": 0.5926
+    },
+    {
+      "epoca": 28,
+      "perda": 0.5717,
+      "f1_val": 0.5729,
+      "acc_val": 0.5926
+    },
+    {
+      "epoca": 29,
+      "perda": 0.6027,
+      "f1_val": 0.6198,
+      "acc_val": 0.642
+    },
+    {
+      "epoca": 30,
+      "perda": 0.55,
+      "f1_val": 0.6199,
+      "acc_val": 0.642
+    }
+  ]
+}

@@ -12,11 +12,12 @@ import torch
 from torch import nn
 from torchvision import models
 
+from src.metrics.dados import TIPO
 from src.preprocessing import transforms as T
 
 ARQUITETURAS = ("mobilenet_v3_large", "resnet18", "convnext_tiny")
 LR_MAXIMA = {"mobilenet_v3_large": 1e-3, "resnet18": 1e-3, "convnext_tiny": 3e-4}  # ConvNeXt pede taxa menor
-CLAHE_PADRAO = {"casca": 3.0, "folha": 1.5}
+CLAHE_PADRAO = {"casca": 3.0, "folha": 1.5, "tronco_br": 3.0, "folha_br": 1.5}
 LADO = 224
 
 
@@ -76,7 +77,7 @@ class Classificador:
                  clahe: float | None = None) -> tuple[list[np.ndarray], list[tuple[int, int, int]]]:
         """Recortes que a rede vê e onde cada um fica na imagem (x, y, lado), para o desenho."""
         img = T.clahe_l(img, self.clahe if clahe is None else clahe)
-        if self.modo == "casca":
+        if TIPO[self.modo] == "tronco":
             base = reduzir_menor_lado(img, 2 * lado_patch)
             esc = img.shape[0] / base.shape[0]
             ps = T.patches(base, lado_patch)

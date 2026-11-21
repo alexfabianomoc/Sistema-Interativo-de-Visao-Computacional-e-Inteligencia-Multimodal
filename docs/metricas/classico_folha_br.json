@@ -1,0 +1,151 @@
+{
+  "modo": "folha_br",
+  "metodo": "Hu + forma + cor + SVM",
+  "C": 1,
+  "f1_macro_val": 0.1098,
+  "n": {
+    "train": 2726,
+    "val": 539,
+    "test": 574
+  },
+  "acuracia": 0.439,
+  "acuracia_top3": 0.662,
+  "f1_macro": 0.1023,
+  "tempo_extracao_s": 19.5,
+  "tempo_treino_s": 7.88,
+  "tempo_classificacao_ms_por_imagem_sem_extracao": 0.427,
+  "classes": [
+    "Schinus terebinthifolia",
+    "Handroanthus",
+    "Paubrasilia echinata",
+    "Terminalia catappa",
+    "Pachira aquatica",
+    "Syzygium cumini",
+    "Mangifera indica",
+    "Pleroma granulosum",
+    "Cenostigma pluviosum",
+    "Erythrina speciosa"
+  ],
+  "matriz_confusao": [
+    [
+      207,
+      14,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      58,
+      45,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      46,
+      7,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      41,
+      9,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      34,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      23,
+      9,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      15,
+      6,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      14,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      12,
+      11,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      10,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ]
+}
