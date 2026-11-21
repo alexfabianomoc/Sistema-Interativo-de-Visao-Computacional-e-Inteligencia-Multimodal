@@ -1,5 +1,8 @@
 {
-  "pasta_drive": "https://drive.google.com/drive/folders/1rsOFh9vF2a7DP6274O-FKbmxfdDX8f01",
+  "pastas_drive": [
+    "https://drive.google.com/drive/folders/1rsOFh9vF2a7DP6274O-FKbmxfdDX8f01",
+    "https://drive.google.com/drive/folders/1hTSvOAdWXWZIRUJEj35X1VO94tWLxdJF"
+  ],
   "arquivos": {
     "classico_casca.joblib": {
       "bytes": 3242381,
