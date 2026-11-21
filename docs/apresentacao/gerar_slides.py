@@ -161,7 +161,7 @@ s = novo("Apresentar o tema em uma frase: uma aplicação que sugere a espécie 
          "duvidosos para um profissional.", escuro=True)
 caixa(s, 0.8, 1.7, 11.5, 1.8, "Identificação de árvores urbanas brasileiras por visão computacional", 44, BRANCO, True, TIT)
 caixa(s, 0.8, 3.75, 11.5, 0.6, "Tronco, folha e as duas juntas, com mapa de calor, revisão por profissional e um VLM local", 20, RGBColor(0xCF, 0xE3, 0xCB))
-caixa(s, 0.8, 5.3, 11.5, 1.2, ["Alex Fabiano Silva · RA 031600",
+caixa(s, 0.8, 5.3, 11.5, 1.2, ["Alex Fabiano Silva · RA 031600 · trabalho individual",
                                 "Computação Gráfica, Realidade Virtual e Metaverso · 2026-2 · Prof. Pedro Cândido"], 16, BRANCO)
 circulo(s, 11.2, 5.25, 1.2, "27/11", IPE, 18)
 n += 1
@@ -190,7 +190,9 @@ rodape(s, n)
 # 3 ---------------------------------------------------------------- evolução
 s = novo("Contar a evolução como uma sequência de decisões guiadas por dados: cada mudança veio de um teste. "
          "Destaque a queda de 100% para 30,5% nas fotos de campo, que motivou a troca de base, e o teste de "
-         "rendimento que definiu as espécies brasileiras.")
+         "rendimento que definiu as espécies brasileiras. Citar as dificuldades da linha de baixo e como cada uma "
+         "foi resolvida: troca de base, fotos de campo no treino, PaliGemma para separar as partes, leitura de "
+         "imagem própria para caminhos com acento e revisão taxonômica.")
 n += 1
 titulo(s, "Como o projeto evoluiu", "Cada mudança de rumo veio de um teste, registrada no diário e nos commits")
 etapas = [("1", "Casca europeia", "TRUNK12 (12 espécies). Pl@ntNet-300K não tem nenhuma espécie em comum"),
@@ -206,7 +208,10 @@ for i, (num, cab, txt) in enumerate(etapas):
         ln.line.color.rgb, ln.line.width = MUSGO, Pt(2)
     caixa(s, x, 3.25, 2.3, 0.5, cab, 18, VERDE, True, alin=PP_ALIGN.CENTER)
     caixa(s, x + 0.05, 3.85, 2.2, 2.4, txt, 14, TEXTO, alin=PP_ALIGN.CENTER)
-caixa(s, 0.6, 6.3, 12, 0.45, "20/11 a 21/11/2026 · decisões do autor em cada etapa", 12, CINZA, italico=True)
+caixa(s, 0.6, 5.95, 12, 0.75, [
+    "Dificuldades: bases europeias sem espécies em comum; queda de 100% para 30,5% fora do laboratório; poucas fotos de "
+    "tronco no Brasil; partes (tronco/folha) sem rótulo no iNaturalist; OpenCV falhando com acentos no caminho; "
+    "nomes científicos não informados pelo TRUNK12."], 13, CINZA, italico=True)
 rodape(s, n)
 
 # 4 ---------------------------------------------------------------- dados
@@ -253,10 +258,12 @@ for i, (cab, txt) in enumerate(passos):
     if i < 5:
         a = s.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW, Inches(x + 1.87), Inches(3.15), Inches(0.21), Inches(0.3))
         a.fill.solid(); a.fill.fore_color.rgb = MUSGO; a.line.fill.background()
-cartao(s, 2.7, 4.85, 3.9, 1.5, CLARO)
-caixa(s, 2.9, 5.0, 3.5, 1.2, ["Fusão tronco + folha", "produto das probabilidades nas espécies em comum"], 15, TEXTO)
-cartao(s, 6.9, 4.85, 3.9, 1.5, CLARO)
-caixa(s, 7.1, 5.0, 3.5, 1.2, ["VLM PaliGemma 2 (opcional)", "descreve, verifica a entrada e responde, sem classificar"], 15, TEXTO)
+cartao(s, 2.7, 4.75, 3.9, 1.5, CLARO)
+caixa(s, 2.9, 4.9, 3.5, 1.2, ["Fusão tronco + folha", "produto das probabilidades nas espécies em comum"], 15, TEXTO)
+cartao(s, 6.9, 4.75, 3.9, 1.5, CLARO)
+caixa(s, 7.1, 4.9, 3.5, 1.2, ["VLM PaliGemma 2 (opcional)", "descreve, verifica a entrada e responde, sem classificar"], 15, TEXTO)
+caixa(s, 0.6, 6.5, 12.1, 0.4, "Módulos: app.py · src/acquisition · src/preprocessing · src/models · src/visualization · "
+      "src/metrics · src/interface · scripts/ · tests/ (30 testes)", 13, CINZA)
 rodape(s, n)
 
 # 6 ---------------------------------------------------------------- pré-processamento
@@ -292,6 +299,52 @@ for i, (cab, itens) in enumerate([
     circulo(s, x + 0.25, 2.25, 0.6, str(i + 1), IPE if i == 2 else VERDE, 16)
     caixa(s, x + 1.0, 2.33, 2.7, 0.5, cab, 20, VERDE, True)
     lista(s, x + 0.3, 3.15, 3.35, 3.1, itens, 15)
+rodape(s, n)
+
+# 7b --------------------------------------------------------------- interpretação das saídas
+s = novo("A rede devolve probabilidades. A aplicação transforma isso em decisão: média dos patches ou recortes, "
+         "top-k, limiar de 60% para inconclusivo, fusão quando há tronco e folha, e consulta às exóticas quando o "
+         "modelo brasileiro não decide. O Grad-CAM mostra onde a rede olhou para a espécie escolhida.")
+n += 1
+titulo(s, "Interpretação das saídas", "Das probabilidades da rede à decisão mostrada ao usuário")
+etapas_i = [("Probabilidades", "softmax por patch\nou por recorte"), ("Média", "uma distribuição\npor foto"),
+            ("Top-k", "espécies e\nconfiança"), ("Limiar 60%", "abaixo: inconclusivo\ne revisão"),
+            ("Fusão / exóticas", "tronco × folha;\nreserva europeia")]
+for i, (cab, txt) in enumerate(etapas_i):
+    x = 0.6 + i * 2.5
+    cartao(s, x, 2.0, 2.2, 1.9, CLARO if i != 3 else RGBColor(0xFF, 0xF4, 0xD6))
+    caixa(s, x + 0.1, 2.15, 2.0, 0.45, cab, 17, VERDE, True, alin=PP_ALIGN.CENTER)
+    caixa(s, x + 0.1, 2.7, 2.0, 1.1, txt.split("\n"), 14, TEXTO, alin=PP_ALIGN.CENTER)
+    if i < 4:
+        a = s.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW, Inches(x + 2.22), Inches(2.8), Inches(0.26), Inches(0.3))
+        a.fill.solid(); a.fill.fore_color.rgb = MUSGO; a.line.fill.background()
+lista(s, 0.6, 4.35, 12.1, 2.4, [
+    ("Grad-CAM: ", "gradiente da espécie escolhida na última camada convolucional; mostra a região que pesou na decisão"),
+    ("Grade de patches: ", "cada patch pinta a espécie que votou, com a confiança escrita no canto"),
+    ("Verificação pelo VLM: ", "\"há um tronco nesta imagem?\" avisa quando a foto não é do que o modo espera"),
+], 15)
+rodape(s, n)
+
+# 7c --------------------------------------------------------------- mapeamento de coordenadas
+s = novo("Item 9 do roteiro. A rede só vê quadrados de 224 px. Para desenhar na foto original, cada coordenada "
+         "volta pelo caminho inverso: tira as bordas do letterbox, divide pela escala, soma a posição do patch e, "
+         "na tela, a imagem é reescalada para a largura da interface.")
+n += 1
+titulo(s, "Mapeamento de coordenadas", "Da saída 7×7 da rede ao pixel da foto original e à tela")
+cadeia = [("Saída da rede", "mapa 7×7 do Grad-CAM"), ("Entrada 224×224", "interpolação bilinear"),
+          ("Patch ou recorte", "tira bordas: (x − dx) / escala"), ("Foto original", "soma a posição (x0, y0) do patch"),
+          ("Tela", "reescala para a largura da interface")]
+for i, (cab, txt) in enumerate(cadeia):
+    y = 1.85 + i * 0.98
+    cartao(s, 0.6, y, 6.0, 0.8, CLARO if i != 3 else RGBColor(0xFF, 0xF4, 0xD6))
+    caixa(s, 0.85, y + 0.12, 2.4, 0.55, cab, 16, VERDE, True, ancora=MSO_ANCHOR.MIDDLE)
+    caixa(s, 3.2, y + 0.12, 3.3, 0.55, txt, 14, TEXTO, ancora=MSO_ANCHOR.MIDDLE)
+lista(s, 7.1, 1.9, 5.6, 4.9, [
+    ("Letterbox: ", "escala = 224 / maior lado; bordas dx, dy centralizam a imagem; Letterbox.para_original() desfaz"),
+    ("Tronco: ", "patches de 224 px na foto reduzida (448 px); posição e tamanho multiplicados pela razão de redução"),
+    ("Folha: ", "imagem inteira + 5 recortes; cada mapa volta ao seu recorte e a média é suavizada nas emendas"),
+    ("Sobreposição: ", "onde patches se cruzam, o mapa final é a média; testado em tests/test_preprocessing.py"),
+], 15)
 rodape(s, n)
 
 # 8 ---------------------------------------------------------------- CG
@@ -434,7 +487,7 @@ rodape(s, n)
 s = novo("Trabalho futuro principal: guardar as fotos validadas por profissionais numa base própria para treinar de "
          "novo, com consentimento. Ética: tudo roda localmente e cada foto tem licença e autor. Uso de IA declarado.")
 n += 1
-titulo(s, "Trabalho futuro, ética, créditos e uso de IA")
+titulo(s, "Trabalho futuro, ética e uso de IA")
 blocos = [("Trabalho futuro", ["Guardar a foto após a revisão", "Base própria validada com manifesto",
                                "Treinar com ela, fora do teste", "Consentimento de uso no envio"]),
           ("Ética e privacidade", ["Tudo roda no computador do usuário", "Só o recorte vai ao VLM, sem EXIF",
@@ -446,6 +499,28 @@ for i, (cab, itens) in enumerate(blocos):
     cartao(s, x, 1.65, 3.9, 3.6)
     caixa(s, x + 0.3, 1.85, 3.3, 0.5, cab, 20, VERDE, True)
     lista(s, x + 0.3, 2.55, 3.35, 4.0, itens, 15, espaco=8)
+rodape(s, n)
+
+# 16b -------------------------------------------------------------- referências e contribuição
+s = novo("Trabalho individual: todas as decisões de escopo, bases, espécies, modelos e taxonomia foram do autor; "
+         "a IA foi usada como ferramenta e está declarada. Referências e créditos completos no README.")
+n += 1
+titulo(s, "Contribuição, referências e créditos")
+cartao(s, 0.6, 1.65, 4.0, 3.7, RGBColor(0xFF, 0xF4, 0xD6))
+caixa(s, 0.9, 1.85, 3.5, 0.5, "Contribuição", 20, VERDE, True)
+lista(s, 0.9, 2.5, 3.5, 4.0, ["Trabalho individual", "Alex Fabiano Silva, RA 031600",
+                              "Escopo, bases, espécies, modelos, taxonomia e revisão: decisões do autor",
+                              "Histórico nos commits do GitHub e no diário"], 15)
+lista(s, 5.0, 1.75, 7.7, 5.0, [
+    ("Dados: ", "iNaturalist (Brasil, CC); GBIF, Pl@ntNet observations (Affouard et al., 2025); "
+               "TRUNK12 (Švab, 2014, Univ. de Ljubljana)"),
+    ("Modelos: ", "torchvision (ConvNeXt-Tiny, MobileNetV3, ResNet-18); PaliGemma 2 (Google); "
+                 "Opus-MT (Helsinki-NLP); BioCLIP (Stevens et al., 2024)"),
+    ("Artigos: ", "Cotrim e Pedrini (2019); Ratajczak et al. (2019); Selvaraju et al., Grad-CAM (2017); "
+                 "Belfort et al. (2026)"),
+    ("Taxonomia: ", "GBIF Backbone e EPPO Global Database, consultados em 21/11/2026"),
+    ("Bibliotecas: ", "PyTorch, OpenCV, scikit-learn, scikit-image, Streamlit, Transformers"),
+], 14)
 rodape(s, n)
 
 # 17 --------------------------------------------------------------- encerramento

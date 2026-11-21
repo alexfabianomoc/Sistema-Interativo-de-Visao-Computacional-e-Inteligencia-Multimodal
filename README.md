@@ -304,4 +304,4 @@ As imagens do iNaturalist e do GBIF são públicas, só com licenças Creative C
 
 ## 13. Diário de desenvolvimento e apresentação
 
-Ver `docs/diario.md` (uma entrada por etapa, com os quatro marcos). A apresentação de 18 slides, com notas do apresentador, está em `docs/apresentacao/` (PPTX e PDF).
+Ver `docs/diario.md` (uma entrada por etapa, com os quatro marcos). A apresentação de 21 slides, com notas do apresentador e um slide para cada item do roteiro da seção 13, está em `docs/apresentacao/` (PPTX e PDF).
