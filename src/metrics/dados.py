@@ -53,5 +53,30 @@ def folhas() -> dict[str, list[tuple[Path, int]]]:
     return out
 
 
+def _manifesto(caminho: Path, por_split: bool = True) -> dict[str, list[tuple[Path, int]]]:
+    out: dict[str, list[tuple[Path, int]]] = {"train": [], "val": [], "test": []}
+    with open(caminho, encoding="utf-8") as fh:
+        for linha in csv.DictReader(fh):
+            out[linha.get("split", "test") if por_split else "test"].append(
+                (DATA / linha["caminho"], CLASSES.index(linha["especie"])))
+    return out
+
+
+def casca_campo() -> list[tuple[Path, int]]:
+    """Teste de campo: fotos de casca do GBIF que nunca entram em treino nem validação."""
+    m = DATA / "casca_campo" / "manifesto.csv"
+    return _manifesto(m, por_split=False)["test"] if m.exists() else []
+
+
+def casca_mista() -> dict[str, list[tuple[Path, int]]]:
+    """TRUNK12 + fotos de casca do GBIF (treino e validação). O teste continua sendo o do TRUNK12;
+    o teste de campo fica separado em casca_campo()."""
+    t = trunk12()
+    g = _manifesto(DATA / "casca_gbif" / "manifesto.csv")
+    return {"train": t["train"] + g["train"], "val": t["val"] + g["val"], "test": t["test"]}
+
+
 def carregar(modo: str) -> dict[str, list[tuple[Path, int]]]:
-    return {"casca": trunk12, "folha": folhas}[modo]()
+    if modo == "casca":
+        return casca_mista() if (DATA / "casca_gbif" / "manifesto.csv").exists() else trunk12()
+    return folhas()

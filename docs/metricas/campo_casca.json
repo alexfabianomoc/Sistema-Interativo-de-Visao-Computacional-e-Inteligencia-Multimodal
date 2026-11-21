@@ -3,25 +3,25 @@
   "fonte": "GBIF, Pl@ntNet observations, fotos marcadas como bark",
   "metodos": {
     "mobilenet_v3_large": {
-      "acuracia": 0.3051,
-      "acuracia_top3": 0.5037,
-      "f1_macro": 0.2519,
-      "confianca_media": 0.4207,
-      "fracao_inconclusivo_limiar_0.6": 0.8235
+      "acuracia": 0.6691,
+      "acuracia_top3": 0.8456,
+      "f1_macro": 0.6121,
+      "confianca_media": 0.5158,
+      "fracao_inconclusivo_limiar_0.6": 0.5993
     },
     "resnet18": {
-      "acuracia": 0.2574,
-      "acuracia_top3": 0.4412,
-      "f1_macro": 0.2368,
-      "confianca_media": 0.4447,
-      "fracao_inconclusivo_limiar_0.6": 0.8309
+      "acuracia": 0.614,
+      "acuracia_top3": 0.8456,
+      "f1_macro": 0.5669,
+      "confianca_media": 0.4871,
+      "fracao_inconclusivo_limiar_0.6": 0.6875
     },
     "classico": {
-      "acuracia": 0.114,
-      "acuracia_top3": 0.2794,
-      "f1_macro": 0.0739,
-      "confianca_media": 0.6306,
-      "fracao_inconclusivo_limiar_0.6": 0.125
+      "acuracia": 0.2757,
+      "acuracia_top3": 0.5147,
+      "f1_macro": 0.2229,
+      "confianca_media": 0.2971,
+      "fracao_inconclusivo_limiar_0.6": 1.0
     }
   }
 }

@@ -129,7 +129,15 @@ def main() -> None:
     teste = avaliar(clf, splits["test"])
     prob = teste.pop("_prob")
     np.save(RAIZ / "models" / f"{a.arquitetura}_{a.modo}_prob_teste.npy", prob)  # usado na fusão
+    campo = dados.casca_campo() if a.modo == "casca" else []
+    if campo:  # fotos de campo nunca vistas no treino
+        teste_campo = avaliar(clf, campo)
+        teste_campo.pop("_prob")
+        teste["teste_campo"] = {k: v for k, v in teste_campo.items() if k != "matriz_confusao"} | {"n": len(campo)}
+        print("teste de campo:", teste["teste_campo"])
     resultado = {"modo": a.modo, "metodo": a.arquitetura, "dispositivo": str(disp),
+                 "dados_treino": "TRUNK12 + GBIF" if a.modo == "casca" and len(splits["train"]) > 300 else
+                 ("TRUNK12" if a.modo == "casca" else "GBIF folhas"),
                  "n": {k: len(v) for k, v in splits.items()}, "epocas": epocas,
                  "melhor_epoca": torch.load(saida_pt, weights_only=False)["epoca"],
                  "f1_macro_val": melhor, **teste, "tempo_treino_s": round(t_treino, 1),
