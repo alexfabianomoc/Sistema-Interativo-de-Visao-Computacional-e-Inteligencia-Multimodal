@@ -194,7 +194,7 @@ s = novo("Contar a evolução como uma sequência de decisões guiadas por dados
 n += 1
 titulo(s, "Como o projeto evoluiu", "Cada mudança de rumo veio de um teste, registrada no diário e nos commits")
 etapas = [("1", "Casca europeia", "TRUNK12 (12 espécies). Pl@ntNet-300K não tem nenhuma espécie em comum"),
-          ("2", "Folha via GBIF", "Fotos de folha das mesmas 12 espécies: a fusão casca + folha fica possível"),
+          ("2", "Folha via GBIF", "Fotos de folha das mesmas 12 espécies: a fusão tronco + folha fica possível"),
           ("3", "Teste de campo", "100% no TRUNK12, mas 30,5% em fotos reais; com fotos de campo no treino, 70,6%"),
           ("4", "Foco no Brasil", "Teste de rendimento com 18 árvores urbanas do iNaturalist define as espécies"),
           ("5", "Reserva", "\"Casca\" vira \"tronco\"; o TRUNK12 passa a atender só árvores exóticas")]

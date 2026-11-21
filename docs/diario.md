@@ -14,3 +14,4 @@
 | 21/11/2026 | 4 | Pesos dos modos brasileiros no Google Drive (segunda pasta-espelho); download dos 16 pesos testado do zero numa pasta vazia, todos conferidos por SHA-256. |
 | 21/11/2026 | 4 | Apresentação de 17 slides (docs/apresentacao, PPTX e PDF) com evolução, decisões, pipeline, métricas, acertos e erros, VLM, limitações, revisão taxonômica, trabalho futuro e créditos. |
 | 21/11/2026 | 4 | Galeria de acertos e erros das espécies brasileiras (tronco, folha e fusão da mesma árvore), com Grad-CAM e comentários; slides atualizados (18). |
+| 21/11/2026 | 4 | Conferência automática da documentação (tests/test_documentacao.py): README e slides comparados com testes, amostras, métricas, taxonomia, pesos e uso do termo tronco; 30 testes passando. |

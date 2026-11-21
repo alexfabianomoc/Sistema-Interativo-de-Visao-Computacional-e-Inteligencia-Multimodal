@@ -88,7 +88,7 @@ A aplicação abre em <http://localhost:8501>. Para testar sem câmera, use a fo
 
 Testes automáticos: `python -m pytest -q tests`.
 
-Instalação testada do zero em 21/11/2026 (clone novo, ambiente novo, pesos baixados do Drive). Depois da inclusão dos modos brasileiros, o download dos 16 pesos foi testado de novo numa pasta vazia (`python scripts/baixar_pesos.py --destino <pasta>`). Hoje são 17 testes automáticos, todos passando.
+Instalação testada do zero em 21/11/2026 (clone novo, ambiente novo, pesos baixados do Drive). Depois da inclusão dos modos brasileiros, o download dos 16 pesos foi testado de novo numa pasta vazia (`python scripts/baixar_pesos.py --destino <pasta>`). Hoje são 30 testes automáticos (incluindo a conferência da documentação em `tests/test_documentacao.py`), todos passando.
 
 ## 5. Arquitetura e pipeline
 
