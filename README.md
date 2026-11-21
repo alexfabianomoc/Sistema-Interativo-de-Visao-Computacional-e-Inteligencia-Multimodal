@@ -61,7 +61,7 @@ Sem GPU NVIDIA: troque `+cu124` por nada nas linhas do `torch` e `torchvision` d
 
 ### Pesos dos modelos
 
-Os pesos não ficam no Git. O script procura em `models/` e, se não achar, baixa do espelho no Google Drive:
+Os 16 pesos (4 métodos × 4 modos: tronco e folha brasileiros, tronco e folha de exóticas) não ficam no Git. O script confere cada arquivo em `models/` pelo SHA-256 (`scripts/pesos.json`) e baixa o que faltar das duas pastas-espelho no Google Drive:
 
 ```bash
 python scripts/baixar_pesos.py
@@ -88,7 +88,7 @@ A aplicação abre em <http://localhost:8501>. Para testar sem câmera, use a fo
 
 Testes automáticos: `python -m pytest -q tests`.
 
-Instalação testada do zero em 21/11/2026 (clone novo, ambiente novo, pesos baixados do Drive): 14 testes passaram.
+Instalação testada do zero em 21/11/2026 (clone novo, ambiente novo, pesos baixados do Drive). Depois da inclusão dos modos brasileiros, o download dos 16 pesos foi testado de novo numa pasta vazia (`python scripts/baixar_pesos.py --destino <pasta>`). Hoje são 17 testes automáticos, todos passando.
 
 ## 5. Arquitetura e pipeline
 
@@ -99,7 +99,8 @@ Aquisição ──> Preparação ──> Análise visual ──> Representação
  câmera,       letterbox,     clássico LBP/      legenda, PNG)      revisão)      campo, fusão,
  drone/EXIF)   CLAHE, norm.)  forma + SVM)                                         concordância)
                                    │
-                                   └──> Fusão casca + folha (produto das probabilidades)
+                                   └──> Fusão tronco + folha (produto das probabilidades nas espécies em comum)
+                                   └──> Reserva de exóticas (TRUNK12 / folhas europeias) quando inconclusivo
                                    └──> VLM PaliGemma 2 (opcional): descrição, verificação, perguntas
 ```
 
@@ -114,8 +115,8 @@ Aquisição ──> Preparação ──> Análise visual ──> Representação
 | `src/interface/` | Páginas Streamlit |
 | `scripts/` | Preparação dos dados, treino, avaliação, pesos, teste do VLM |
 | `tests/` | Testes de pré-processamento, casos de falha e da interface (AppTest) |
-| `docs/` | Proposta, diário, métricas (`docs/metricas/*.json`), protocolo do VLM, galeria |
-| `data_samples/` | 12 fotos de folha e 12 de casca para demonstração, com créditos em `CREDITOS.csv` |
+| `docs/` | Proposta, diário, métricas (`docs/metricas/*.json`), protocolo do VLM, galerias (`galeria_br.md`, `galeria.md`), auditoria taxonômica, teste de rendimento do iNaturalist e a apresentação (`docs/apresentacao/`, PPTX e PDF) |
+| `data_samples/` | 50 fotos de demonstração: `tronco_br/` e `folha_br/` (Brasil, iNaturalist) e `casca/` e `folha/` (exóticas, GBIF), com créditos em `CREDITOS.csv` |
 | `models/` | Pesos (fora do Git) |
 
 ### Pré-processamento (seção 5 do enunciado)
@@ -126,17 +127,18 @@ Aquisição ──> Preparação ──> Análise visual ──> Representação
 | Recorte da região de interesse | Concentra a análise no tronco ou na folha e descarta céu, chão e prédios |
 | Rotação | Endireita troncos fotografados inclinados (comum em drone) |
 | Redimensionamento com proporção (letterbox) | A rede espera 224×224; distorcer a imagem mudaria a textura e a forma |
-| CLAHE no canal L (LAB) | Realça a textura da casca (forte) e as nervuras da folha (suave) sem alterar as cores |
+| CLAHE no canal L (LAB) | Realça a textura do tronco (forte) e as nervuras da folha (suave) sem alterar as cores |
 | Normalização ImageNet | Mesma distribuição das imagens de pré-treino das CNNs |
 | Segmentação por cor (HSV) + abertura e fechamento | Isola a folha do fundo para a linha de base de forma e para o contorno desenhado |
 
 ### Método de visão
 
-- **Casca:** a imagem reduzida (menor lado 448 px) é dividida em patches de 224 px; cada patch passa pela CNN e a espécie final é a média das probabilidades. A casca é textura que se repete pelo tronco, por isso patches funcionam bem.
+- **Tronco:** a imagem reduzida (menor lado 448 px) é dividida em patches de 224 px; cada patch passa pela CNN e a espécie final é a média das probabilidades. A casca é textura que se repete pelo tronco, por isso patches funcionam bem.
 - **Folha:** imagem inteira + 4 cantos + centro (cada recorte com 80% do menor lado), média das probabilidades. A folha depende de forma e contorno, por isso a imagem é vista inteira.
 - **CNNs** (ConvNeXt-Tiny como padrão; MobileNetV3-Large e ResNet-18 para comparação) pré-treinadas no ImageNet com ajuste fino completo (AdamW, OneCycle, label smoothing 0,1, pesos por classe, precisão mista na GPU), melhor época escolhida pelo F1 macro de validação.
-- **Linhas de base clássicas:** casca = histogramas LBP em três escalas + histograma de cor HSV + SVM RBF; folha = momentos de Hu, razão de aspecto, solidez e circularidade do maior contorno + histograma de cor + SVM.
-- **Fusão casca + folha:** produto das probabilidades dos dois modelos, renormalizado (fusão tardia).
+- **Linhas de base clássicas:** tronco = histogramas LBP em três escalas + histograma de cor HSV + SVM RBF; folha = momentos de Hu, razão de aspecto, solidez e circularidade do maior contorno + histograma de cor + SVM.
+- **Fusão tronco + folha:** produto das probabilidades dos dois modelos, renormalizado (fusão tardia). Na base brasileira, tronco e folha têm conjuntos de espécies diferentes, então a fusão usa só as 3 espécies em comum.
+- **Reserva de exóticas:** se o modelo brasileiro fica abaixo do limiar, a aplicação roda também o modelo das 12 espécies europeias (TRUNK12 no tronco, folhas do GBIF na folha) e mostra o resultado como "possível espécie exótica".
 
 ### Computação Gráfica (seção 7): 8 itens
 
@@ -157,10 +159,10 @@ Aquisição ──> Preparação ──> Análise visual ──> Representação
 |---|---|---|---|
 | **iNaturalist, Brasil** (`place_id=6878`, grau de pesquisa) | Modos brasileiros: 12.976 fotos de 18 árvores urbanas; o PaliGemma separou cada foto em tronco, folha ou outras; divisão 70/15/15 **por observação** | 500 px (*medium*) | Só fotos com licença Creative Commons (CC0, BY, BY-SA, BY-NC e variantes); autor e link em `data/inat_br/manifesto.csv` |
 | **TRUNK12** (Švab, 2014; ViCoS Lab, Univ. de Ljubljana) | Reserva de exóticas, tronco: treino, validação e teste (70/15/15 estratificado, semente 42) | 393 fotos JPEG 3000×4000 (Nikon COOLPIX S3000, a 20 cm do tronco), 12 espécies, 30 a 45 por espécie | Sem licença explícita; os autores pedem citação. Por cautela, não versionado nem exibido em `data_samples/` |
-| **GBIF — Pl@ntNet observations**, fotos marcadas como *leaf* | Folha: 5.168 fotos (até 500 por espécie), 80/10/10 **por observação** | 600 px | Cada foto CC BY-SA; autor e link em `data/folhas/manifesto.csv` |
-| **GBIF — Pl@ntNet observations**, fotos marcadas como *bark* | Casca de campo: 1.779 para treino/validação + 272 só para teste | 600 px | CC BY-SA; autor e link nos manifestos |
+| **GBIF — Pl@ntNet observations**, fotos marcadas como *leaf* | Reserva de exóticas, folha: 5.168 fotos (até 500 por espécie), 80/10/10 **por observação** | 600 px | Cada foto CC BY-SA; autor e link em `data/folhas/manifesto.csv` |
+| **GBIF — Pl@ntNet observations**, fotos marcadas como *bark* | Reserva de exóticas, tronco de campo: 1.779 para treino/validação + 272 só para teste | 600 px | CC BY-SA; autor e link nos manifestos |
 
-Por que não a Pl@ntNet-300K: nenhuma das suas 1.081 espécies coincide com as do TRUNK12. A Forest Species Database (UFPR) mostra o corte da madeira, não a casca da árvore em pé. Detalhes em `docs/proposta.md`.
+Por que não a Pl@ntNet-300K: nenhuma das suas 1.081 espécies coincide com as do TRUNK12. A Forest Species Database (UFPR) mostra o corte da madeira, não o tronco da árvore em pé. Detalhes em `docs/proposta.md`.
 
 Preparação da base brasileira: `python scripts/baixar_inat_brasil.py baixar`, `... classificar`, `... dividir`. Reserva de exóticas: `python scripts/preparar_dados.py trunk12 --zips <pasta dos zips>`, `... listar`, `... baixar`; `python scripts/baixar_cascas_campo.py`; `python scripts/baixar_cascas_treino.py`.
 
@@ -211,7 +213,7 @@ Galeria comentada com Grad-CAM em [docs/galeria_br.md](docs/galeria_br.md): 5 ac
 | ResNet-18 | 98,3% | 100% | 0,982 | 61,4% | 84,6% | 114 ms |
 | LBP + cor + SVM | 72,9% | 93,2% | 0,690 | 27,6% | 51,5% | <1 ms (SVM) |
 
-Antes de incluir fotos de campo no treino (só TRUNK12): MobileNetV3 100% no TRUNK12 e **30,5%** no campo; LBP 88,1% e 11,4%. O tempo da casca inclui todos os patches da foto.
+Antes de incluir fotos de campo no treino (só TRUNK12): MobileNetV3 100% no TRUNK12 e **30,5%** no campo; LBP 88,1% e 11,4%. O tempo do tronco inclui todos os patches da foto.
 
 ### Reserva de exóticas: folha (518 fotos de teste)
 
@@ -224,10 +226,12 @@ Antes de incluir fotos de campo no treino (só TRUNK12): MobileNetV3 100% no TRU
 
 ### Reserva de exóticas: tronco + folha (ConvNeXt-Tiny, 518 pares de árvores diferentes)
 
-| Casca de | Só casca | Só folha | Casca + folha |
+| Tronco de | Só tronco | Só folha | Tronco + folha |
 |---|---|---|---|
 | TRUNK12 | 100% | 97,1% | 100% |
 | Fotos de campo | 70,1% | 97,1% | **99,0%** |
+
+Nas exóticas, cada par junta fotos de árvores diferentes da mesma espécie, porque essas bases não têm tronco e folha da mesma árvore.
 
 ### Comparação zero-shot: BioCLIP sem treino
 
@@ -236,14 +240,14 @@ O BioCLIP (`imageomics/bioclip`, MIT) classifica comparando a foto com textos "a
 | Conjunto | BioCLIP (sem treino) | ConvNeXt-Tiny ajustada |
 |---|---|---|
 | TRUNK12 (59) | 28,8% | 100% |
-| Casca de campo (272) | 47,8% | 70,6% |
+| Tronco de campo (272) | 47,8% | 70,6% |
 | Folhas (518) | 94,0% | 97,1% |
 
-O ajuste fino vence nos três conjuntos, com folga na casca. O BioCLIP vai mal nas fotos padronizadas de casca muito de perto (TRUNK12), que fogem das fotos comuns de biodiversidade, e quase empata nas folhas. Ressalva: ele foi treinado com milhões de fotos de biodiversidade, possivelmente incluindo fotos da Pl@ntNet/GBIF, o que pode favorecê-lo nos conjuntos do GBIF.
+O ajuste fino vence nos três conjuntos, com folga no tronco. O BioCLIP vai mal nas fotos padronizadas de casca muito de perto (TRUNK12), que fogem das fotos comuns de biodiversidade, e quase empata nas folhas. Ressalva: ele foi treinado com milhões de fotos de biodiversidade, possivelmente incluindo fotos da Pl@ntNet/GBIF, o que pode favorecê-lo nos conjuntos do GBIF.
 
-### Limiar "inconclusivo" (0,6) nas fotos de campo
+### Limiar "inconclusivo" (0,6) nas fotos de campo (exóticas)
 
-A ConvNeXt marca 54% das fotos de campo como inconclusivas; na galeria, 4 dos 5 erros de casca e 4 dos 5 de folha ficaram abaixo do limiar. O SVM clássico fica abaixo do limiar em 100% das fotos de campo, ou seja, não decide nunca. Galeria comentada das exóticas: `docs/galeria.md`.
+A ConvNeXt marca 54% das fotos de campo como inconclusivas; na galeria das exóticas, 4 dos 5 erros de tronco e 4 dos 5 de folha ficaram abaixo do limiar. O SVM clássico fica abaixo do limiar em 100% das fotos de campo, ou seja, não decide nunca. Galeria comentada das exóticas: `docs/galeria.md`.
 
 ### VLM
 
@@ -259,14 +263,16 @@ Treino (GPU RTX 4050): de 10 a 15 min por CNN.
 - **Folha desbalanceada:** aroeira tem 1.528 fotos e mulungu 101; o treino usa pesos por classe, mas o F1 macro fica abaixo da acurácia.
 - **Ipês tratados como gênero** (*Handroanthus* sp.), juntando várias espécies.
 - **TRUNK12 é padronizado demais:** treinada só nele, a MobileNetV3 acerta 100% no teste do TRUNK12 mas só 30,5% em fotos de campo. O treino com fotos do GBIF elevou o campo para 66,9% (MobileNetV3) e 70,6% (ConvNeXt-Tiny), ainda longe do laboratório.
-- **Ginkgo e plátano** têm poucas fotos no GBIF (66 e 102 folhas; 5 e 20 cascas), então seus resultados são menos confiáveis.
-- **Fusão avaliada com pares de árvores diferentes** da mesma espécie, porque as bases não têm casca e folha da mesma árvore.
-- **12 espécies europeias:** espécies fora da lista recebem a mais parecida; o limiar "inconclusivo" e a revisão manual existem para isso. Espécies brasileiras de arborização ficam como trabalho futuro.
-- **Nomes científicos:** o TRUNK12 não informa as espécies. Seis classes são exibidas só pelo gênero (*Alnus*, *Betula*, *Tilia*, *Quercus*, *Platanus*, *Pinus*), mas as fotos do GBIF de cada uma foram baixadas com uma única espécie (*A. glutinosa*, *B. pendula*, *T. cordata*, *Q. robur*, *P. orientalis*, *P. sylvestris*); outras espécies do mesmo gênero podem ser reconhecidas pior. Detalhes em `docs/auditoria_taxonomica.md`.
+- **Ginkgo e plátano** têm poucas fotos no GBIF (66 e 102 fotos de folha; 5 e 20 de tronco), então seus resultados são menos confiáveis.
+- **Fusão nas exóticas avaliada com pares de árvores diferentes** da mesma espécie, porque essas bases não têm tronco e folha da mesma árvore. Na base brasileira os pares são da mesma árvore, mas são só 35.
+- **Espécies fora da lista** (10 brasileiras na folha, 3 no tronco, 12 exóticas) recebem a mais parecida; o limiar "inconclusivo", a consulta às exóticas e a revisão manual existem para isso.
+- **Nomes científicos das exóticas:** o TRUNK12 não informa as espécies. Das 12 classes, 6 ficam no nível de espécie e 6 são exibidas só pelo gênero (*Alnus*, *Betula*, *Tilia*, *Quercus*, *Platanus*, *Pinus*), mas as fotos do GBIF de cada uma foram baixadas com uma única espécie (*A. glutinosa*, *B. pendula*, *T. cordata*, *Q. robur*, *P. orientalis*, *P. sylvestris*); outras espécies do mesmo gênero podem ser reconhecidas pior. Detalhes em `docs/auditoria_taxonomica.md`.
 - **Teste do TRUNK12 tem só 59 fotos**, por isso 100% não significa acerto garantido.
 - **PaliGemma** descreve sempre em inglês (a tradução local resolve em parte) e pode alucinar; ver `docs/vlm_protocolo.md`.
 
 ## 9. Trabalhos futuros
+
+**Mais espécies no modo tronco.** Só 3 das 18 árvores brasileiras candidatas têm fotos de tronco suficientes no iNaturalist; a base validada abaixo é o caminho para aumentar esse número.
 
 **Base própria de fotos validadas por profissionais.** A revisão manual já registra a espécie confirmada, o nome e o registro (CRBio/CREA) do profissional em `revisoes/revisoes.csv`, mas ainda não forma uma base de treino. Falta:
 
@@ -277,7 +283,7 @@ Treino (GPU RTX 4050): de 10 a 15 min por CNN.
 
 ## 10. Ética e privacidade
 
-As imagens do GBIF são públicas, com licença e autor registrados por foto. A aplicação não envia imagens para serviços externos: CNNs, PaliGemma e tradução rodam no computador do usuário. Só o recorte vai ao VLM, sem EXIF nem GPS. Fotos de drone podem ter GPS; as coordenadas ficam só na fila de revisão local. Nenhuma base é redistribuída no repositório.
+As imagens do iNaturalist e do GBIF são públicas, só com licenças Creative Commons, e o autor de cada foto fica registrado nos manifestos. A aplicação não envia imagens para serviços externos: CNNs, PaliGemma e tradução rodam no computador do usuário. Só o recorte vai ao VLM, sem EXIF nem GPS. Fotos de drone podem ter GPS; as coordenadas ficam só na fila de revisão local. Nenhuma base é redistribuída no repositório.
 
 ## 11. Fontes e créditos
 
@@ -285,7 +291,7 @@ As imagens do GBIF são públicas, com licença e autor registrados por foto. A 
 
 **Modelos e pesos:** MobileNetV3-Large, ResNet-18 e ConvNeXt-Tiny pré-treinados no ImageNet (torchvision, BSD-3). BioCLIP (Stevens et al., *BioCLIP: A Vision Foundation Model for the Tree of Life*, CVPR 2024; imageomics/bioclip, MIT), só na comparação zero-shot. PaliGemma 2 3B mix 224 (Google, Gemma Terms of Use). Opus-MT `opus-mt-ROMANCE-en` (Apache 2.0) e `opus-mt-tc-big-en-pt` (CC BY 4.0), Helsinki-NLP.
 
-**Bibliotecas:** PyTorch, torchvision, OpenCV, NumPy, Pillow, scikit-image, scikit-learn, pandas, Streamlit, Hugging Face Transformers, bitsandbytes, accelerate, PyYAML, pytest.
+**Bibliotecas:** PyTorch, torchvision, OpenCV, NumPy, Pillow, scikit-image, scikit-learn, pandas, Streamlit, Hugging Face Transformers, bitsandbytes, accelerate, sentencepiece, sacremoses, open_clip (BioCLIP), gdown (download dos pesos), PyYAML, pytest. A apresentação foi gerada com python-pptx (`docs/apresentacao/gerar_slides.py`).
 
 **Artigos:** Cotrim e Pedrini, *Identificação de Espécies de Árvores por Imagens de Tronco Utilizando Aprendizado de Máquina Profundo*, IC-Unicamp, 2019. Ratajczak et al., *Efficient Bark Recognition in the Wild*, VISAPP 2019. Selvaraju et al., *Grad-CAM*, ICCV 2017. Belfort et al., *Classificação de espécies de árvores em imagens de cenário urbano usando CNNs com Triplet Loss*, SEMISH 2026.
 
@@ -293,9 +299,9 @@ As imagens do GBIF são públicas, com licença e autor registrados por foto. A 
 
 | Ferramenta | Finalidade | Partes afetadas | Revisão e validação |
 |---|---|---|---|
-| Claude (Anthropic), via Claude Code | Planejamento, pesquisa de bases, escrita e depuração de código, documentação | Todo o repositório | Cada etapa foi decidida pelo autor (escolha de bases, espécies, divisões, modelos, padrões); código validado por testes automáticos, execução na interface e métricas em conjuntos de teste separados |
-| PaliGemma 2 (Google) | Componente opcional da aplicação: descrição e perguntas sobre a imagem | Painel do VLM | Protocolo de 20 casos em `docs/vlm_protocolo.md` |
+| Claude (Anthropic), via Claude Code | Planejamento, pesquisa de bases, escrita e depuração de código, documentação, galerias e apresentação | Todo o repositório | Cada etapa foi decidida pelo autor (escolha de bases, espécies, divisões, modelos, padrões); código validado por testes automáticos, execução na interface e métricas em conjuntos de teste separados |
+| PaliGemma 2 (Google) | Componente opcional da aplicação (descrição e perguntas sobre a imagem) e separação das fotos do iNaturalist em tronco, folha ou outras | Painel do VLM e base brasileira | Protocolo de 20 casos em `docs/vlm_protocolo.md`; amostra de 24 fotos por grupo conferida à mão (58% e 67% úteis) |
 
-## 13. Diário de desenvolvimento
+## 13. Diário de desenvolvimento e apresentação
 
-Ver `docs/diario.md` (uma entrada por etapa, com os quatro marcos).
+Ver `docs/diario.md` (uma entrada por etapa, com os quatro marcos). A apresentação de 18 slides, com notas do apresentador, está em `docs/apresentacao/` (PPTX e PDF).
