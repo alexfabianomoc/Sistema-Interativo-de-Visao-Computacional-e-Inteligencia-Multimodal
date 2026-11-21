@@ -1,0 +1,212 @@
+[
+ {
+  "modo": "tronco_br",
+  "grupo": "acerto",
+  "foto": "inat_br/Paubrasilia_echinata/324482685_587311981.jpg",
+  "real": "Paubrasilia echinata",
+  "previsto": "Paubrasilia echinata",
+  "confianca": 0.925
+ },
+ {
+  "modo": "tronco_br",
+  "grupo": "acerto",
+  "foto": "inat_br/Paubrasilia_echinata/300418314_541291814.jpg",
+  "real": "Paubrasilia echinata",
+  "previsto": "Paubrasilia echinata",
+  "confianca": 0.823
+ },
+ {
+  "modo": "tronco_br",
+  "grupo": "acerto",
+  "foto": "inat_br/Paubrasilia_echinata/46649999_73987836.jpg",
+  "real": "Paubrasilia echinata",
+  "previsto": "Paubrasilia echinata",
+  "confianca": 0.847
+ },
+ {
+  "modo": "tronco_br",
+  "grupo": "acerto",
+  "foto": "inat_br/Paubrasilia_echinata/130429438_221811013.jpg",
+  "real": "Paubrasilia echinata",
+  "previsto": "Paubrasilia echinata",
+  "confianca": 0.856
+ },
+ {
+  "modo": "tronco_br",
+  "grupo": "acerto",
+  "foto": "inat_br/Paubrasilia_echinata/130429434_221810813.jpg",
+  "real": "Paubrasilia echinata",
+  "previsto": "Paubrasilia echinata",
+  "confianca": 0.761
+ },
+ {
+  "modo": "tronco_br",
+  "grupo": "erro",
+  "foto": "inat_br/Handroanthus/402556484_739012046.jpg",
+  "real": "Handroanthus",
+  "previsto": "Paubrasilia echinata",
+  "confianca": 0.432
+ },
+ {
+  "modo": "tronco_br",
+  "grupo": "erro",
+  "foto": "inat_br/Handroanthus/320919051_580308575.jpg",
+  "real": "Handroanthus",
+  "previsto": "Paubrasilia echinata",
+  "confianca": 0.508
+ },
+ {
+  "modo": "tronco_br",
+  "grupo": "erro",
+  "foto": "inat_br/Paubrasilia_echinata/104122240_174430865.jpg",
+  "real": "Paubrasilia echinata",
+  "previsto": "Handroanthus",
+  "confianca": 0.413
+ },
+ {
+  "modo": "tronco_br",
+  "grupo": "erro",
+  "foto": "inat_br/Handroanthus/105459455_176950113.jpg",
+  "real": "Handroanthus",
+  "previsto": "Schinus terebinthifolia",
+  "confianca": 0.852
+ },
+ {
+  "modo": "tronco_br",
+  "grupo": "erro",
+  "foto": "inat_br/Handroanthus/199415428_351661844.jpg",
+  "real": "Handroanthus",
+  "previsto": "Paubrasilia echinata",
+  "confianca": 0.436
+ },
+ {
+  "modo": "folha_br",
+  "grupo": "acerto",
+  "foto": "inat_br/Schinus_terebinthifolia/213497237_377290974.jpg",
+  "real": "Schinus terebinthifolia",
+  "previsto": "Schinus terebinthifolia",
+  "confianca": 0.566
+ },
+ {
+  "modo": "folha_br",
+  "grupo": "acerto",
+  "foto": "inat_br/Pleroma_granulosum/260424108_467678698.jpg",
+  "real": "Pleroma granulosum",
+  "previsto": "Pleroma granulosum",
+  "confianca": 0.932
+ },
+ {
+  "modo": "folha_br",
+  "grupo": "acerto",
+  "foto": "inat_br/Pleroma_granulosum/328799034_595882496.jpg",
+  "real": "Pleroma granulosum",
+  "previsto": "Pleroma granulosum",
+  "confianca": 0.92
+ },
+ {
+  "modo": "folha_br",
+  "grupo": "acerto",
+  "foto": "inat_br/Cenostigma_pluviosum/401587691_737099909.jpg",
+  "real": "Cenostigma pluviosum",
+  "previsto": "Cenostigma pluviosum",
+  "confianca": 0.551
+ },
+ {
+  "modo": "folha_br",
+  "grupo": "acerto",
+  "foto": "inat_br/Schinus_terebinthifolia/161430812_279029076.jpg",
+  "real": "Schinus terebinthifolia",
+  "previsto": "Schinus terebinthifolia",
+  "confianca": 0.534
+ },
+ {
+  "modo": "folha_br",
+  "grupo": "erro",
+  "foto": "inat_br/Handroanthus/247698991_442448465.jpg",
+  "real": "Handroanthus",
+  "previsto": "Erythrina speciosa",
+  "confianca": 0.345
+ },
+ {
+  "modo": "folha_br",
+  "grupo": "erro",
+  "foto": "inat_br/Terminalia_catappa/162526028_281029697.jpg",
+  "real": "Terminalia catappa",
+  "previsto": "Erythrina speciosa",
+  "confianca": 0.28
+ },
+ {
+  "modo": "folha_br",
+  "grupo": "erro",
+  "foto": "inat_br/Cenostigma_pluviosum/401587691_737106484.jpg",
+  "real": "Cenostigma pluviosum",
+  "previsto": "Paubrasilia echinata",
+  "confianca": 0.779
+ },
+ {
+  "modo": "folha_br",
+  "grupo": "erro",
+  "foto": "inat_br/Cenostigma_pluviosum/208504537_368914459.jpg",
+  "real": "Cenostigma pluviosum",
+  "previsto": "Paubrasilia echinata",
+  "confianca": 0.812
+ },
+ {
+  "modo": "folha_br",
+  "grupo": "erro",
+  "foto": "inat_br/Terminalia_catappa/301251127_542837261.jpg",
+  "real": "Terminalia catappa",
+  "previsto": "Erythrina speciosa",
+  "confianca": 0.893
+ },
+ {
+  "modo": "tronco+folha",
+  "grupo": "corrigido pela fusão",
+  "foto_tronco": "inat_br/Handroanthus/199415428_351661844.jpg",
+  "foto_folha": "inat_br/Handroanthus/199415428_351661833.jpg",
+  "real": "Handroanthus",
+  "tronco": "Paubrasilia echinata",
+  "folha": "Erythrina speciosa",
+  "fusao": "Handroanthus"
+ },
+ {
+  "modo": "tronco+folha",
+  "grupo": "corrigido pela fusão",
+  "foto_tronco": "inat_br/Paubrasilia_echinata/410758316_755515413.jpg",
+  "foto_folha": "inat_br/Paubrasilia_echinata/410758316_755515445.jpg",
+  "real": "Paubrasilia echinata",
+  "tronco": "Paubrasilia echinata",
+  "folha": "Cenostigma pluviosum",
+  "fusao": "Paubrasilia echinata"
+ },
+ {
+  "modo": "tronco+folha",
+  "grupo": "erro da fusão",
+  "foto_tronco": "inat_br/Handroanthus/307681009_555007784.jpg",
+  "foto_folha": "inat_br/Handroanthus/307681009_555007789.jpg",
+  "real": "Handroanthus",
+  "tronco": "Paubrasilia echinata",
+  "folha": "Terminalia catappa",
+  "fusao": "Paubrasilia echinata"
+ },
+ {
+  "modo": "tronco+folha",
+  "grupo": "corrigido pela fusão",
+  "foto_tronco": "inat_br/Handroanthus/144296402_247629591.jpg",
+  "foto_folha": "inat_br/Handroanthus/144296402_247629598.jpg",
+  "real": "Handroanthus",
+  "tronco": "Handroanthus",
+  "folha": "Cenostigma pluviosum",
+  "fusao": "Handroanthus"
+ },
+ {
+  "modo": "tronco+folha",
+  "grupo": "erro da fusão",
+  "foto_tronco": "inat_br/Paubrasilia_echinata/318081045_574833773.jpg",
+  "foto_folha": "inat_br/Paubrasilia_echinata/318081045_574833763.jpg",
+  "real": "Paubrasilia echinata",
+  "tronco": "Paubrasilia echinata",
+  "folha": "Handroanthus",
+  "fusao": "Handroanthus"
+ }
+]

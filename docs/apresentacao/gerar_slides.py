@@ -352,13 +352,24 @@ caixa(s, 0.9, 5.75, 11.6, 0.9, "Fusão tardia: produto das probabilidades, nas 3
       "(pau-brasil, ipês e aroeira). A folha sozinha escolhe entre 10 espécies.", 15, CINZA)
 rodape(s, n)
 
-# 12 --------------------------------------------------------------- acertos e erros
-s = novo("Mostrar acertos e erros com o mapa de calor. Os erros mostram árvore inteira em vez de folha e espécies "
-         "parecidas. Quatro de cinco erros ficaram abaixo do limiar e seriam marcados como inconclusivos.")
+# 12 --------------------------------------------------------------- acertos e erros: tronco
+s = novo("Tronco brasileiro, teste. Nos acertos o mapa de calor cai sobre as placas da casca. Nos erros, ipê e "
+         "pau-brasil se confundem, com o tronco fotografado de longe ou um galho no lugar do tronco. Quatro dos cinco "
+         "erros ficaram abaixo do limiar e seriam inconclusivos.")
 n += 1
-titulo(s, "Acertos e erros", "Galeria com Grad-CAM (modelos de reserva, folhas europeias); verde acerta, vermelho erra")
-imagem(s, GAL / "folha_acertos.jpg", 1.67, 1.85, w=10.0)
-imagem(s, GAL / "folha_erros.jpg", 1.67, 4.4, w=10.0)
+titulo(s, "Acertos e erros: tronco", "ConvNeXt-Tiny no teste brasileiro, com Grad-CAM; verde acerta, vermelho erra")
+imagem(s, GAL / "br_tronco_br_acertos.jpg", 1.67, 1.85, w=10.0)
+imagem(s, GAL / "br_tronco_br_erros.jpg", 1.67, 4.4, w=10.0)
+rodape(s, n)
+
+# 12b -------------------------------------------------------------- acertos e erros: folha e fusão
+s = novo("Folha: sibipiruna e pau-brasil têm folhas compostas parecidas; um erro é uma flor de ipê separada por engano "
+         "como folha. Fusão: quando um modelo erra com pouca confiança, o outro corrige; no exemplo, tronco 44% errado "
+         "e folha 33% errada viram 82% certo juntos.")
+n += 1
+titulo(s, "Acertos e erros: folha e fusão", "Em cima, erros da folha; embaixo, pares da mesma árvore em que a fusão corrigiu")
+imagem(s, GAL / "br_folha_br_erros.jpg", 1.67, 1.85, w=10.0)
+imagem(s, GAL / "br_fusao_corrigidos.jpg", 1.67, 4.45, w=10.0)
 rodape(s, n)
 
 # 13 --------------------------------------------------------------- exóticas e comparações

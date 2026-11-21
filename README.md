@@ -198,6 +198,10 @@ O SVM de forma quase só acerta a aroeira, que tem metade das fotos; o F1 macro 
 
 Cada par é uma observação do iNaturalist com foto do tronco e da folha da **mesma árvore**, no conjunto de teste. "Só folha" escolhe entre as 10 espécies; a fusão, entre as 3 em comum.
 
+### Acertos e erros (Brasil)
+
+Galeria comentada com Grad-CAM em [docs/galeria_br.md](docs/galeria_br.md): 5 acertos e 5 erros do tronco e da folha, e pares da mesma árvore em que a fusão corrigiu ou errou. Quatro dos cinco erros de tronco e dois dos cinco de folha ficaram abaixo do limiar ("inconclusivo"). Os erros mostram ipê e pau-brasil confundidos pela casca, sibipiruna e pau-brasil pelas folhas compostas, e ruído da separação automática (uma flor de ipê e uma placa de identificação no lugar de folhas).
+
 ### Reserva de exóticas: tronco (TRUNK12 e fotos de campo do GBIF)
 
 | Método | TRUNK12 (59 fotos) | Top-3 | F1 macro | Fotos de campo (272) | Top-3 campo | Tempo/imagem (GPU) |
@@ -239,7 +243,7 @@ O ajuste fino vence nos três conjuntos, com folga na casca. O BioCLIP vai mal n
 
 ### Limiar "inconclusivo" (0,6) nas fotos de campo
 
-A ConvNeXt marca 54% das fotos de campo como inconclusivas; na galeria, 4 dos 5 erros de casca e 4 dos 5 de folha ficaram abaixo do limiar. O SVM clássico fica abaixo do limiar em 100% das fotos de campo, ou seja, não decide nunca. Galeria comentada de acertos e erros: `docs/galeria.md`.
+A ConvNeXt marca 54% das fotos de campo como inconclusivas; na galeria, 4 dos 5 erros de casca e 4 dos 5 de folha ficaram abaixo do limiar. O SVM clássico fica abaixo do limiar em 100% das fotos de campo, ou seja, não decide nunca. Galeria comentada das exóticas: `docs/galeria.md`.
 
 ### VLM
 
