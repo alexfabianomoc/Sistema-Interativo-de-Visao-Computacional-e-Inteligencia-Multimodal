@@ -6,11 +6,11 @@ __pycache__/
 .pytest_cache/
 
 # Bases de dados (extraídas dos zips por scripts/preparar_dados.py; nunca versionar)
-data/
+/data/
 *.zip
 
 # Pesos de modelos (ficam em models/ no computador do autor, com espelho no Google Drive)
-models/
+/models/
 *.pt
 *.pth
 *.safetensors
