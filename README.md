@@ -144,7 +144,7 @@ Aquisição ──> Preparação ──> Análise visual ──> Representação
 
 | Conjunto | Uso | Tamanho | Licença |
 |---|---|---|---|
-| **TRUNK12** (Švab, 2014) | Casca: treino, validação e teste (70/15/15 estratificado, semente 42) | 393 fotos, 12 espécies | A confirmar com os autores; não versionado nem exibido em `data_samples/` |
+| **TRUNK12** (Švab, 2014; ViCoS Lab, Univ. de Ljubljana) | Casca: treino, validação e teste (70/15/15 estratificado, semente 42) | 393 fotos JPEG 3000×4000 (Nikon COOLPIX S3000, a 20 cm do tronco), 12 espécies, 30 a 45 por espécie | Sem licença explícita; os autores pedem citação. Por cautela, não versionado nem exibido em `data_samples/` |
 | **GBIF — Pl@ntNet observations**, fotos marcadas como *leaf* | Folha: 5.168 fotos (até 500 por espécie), 80/10/10 **por observação** | 600 px | Cada foto CC BY-SA; autor e link em `data/folhas/manifesto.csv` |
 | **GBIF — Pl@ntNet observations**, fotos marcadas como *bark* | Casca de campo: 1.779 para treino/validação + 272 só para teste | 600 px | CC BY-SA; autor e link nos manifestos |
 
@@ -208,7 +208,7 @@ As imagens do GBIF são públicas, com licença e autor registrados por foto. A 
 
 ## 10. Fontes e créditos
 
-**Dados:** TRUNK12 — M. Švab, *Tree bark dataset TRUNK12*, Univ. de Ljubljana, 2014. Affouard A, Joly A, Lombardo J, Champ J, Goëau H, Chouet M, Gresse H, Bonnet P (2025). *Pl@ntNet observations*, versão 1.9, conjunto publicado em CC BY 4.0, https://doi.org/10.15468/gtebaa, acessado via GBIF.org em 20 e 21/11/2026; fotos de voluntários da Pl@ntNet, em geral CC BY-SA; créditos por foto nos manifestos e em `data_samples/CREDITOS.csv`.
+**Dados:** TRUNK12 — Švab, M. *Computer-vision-based tree trunk recognition*. Trabalho de conclusão de bacharelado (orientador: Matej Kristan), Fakulteta za računalništvo in informatiko, Univerza v Ljubljani, 2014. Disponível em https://www.vicos.si/resources/trunk12/. Affouard A, Joly A, Lombardo J, Champ J, Goëau H, Chouet M, Gresse H, Bonnet P (2025). *Pl@ntNet observations*, versão 1.9, conjunto publicado em CC BY 4.0, https://doi.org/10.15468/gtebaa, acessado via GBIF.org em 20 e 21/11/2026; fotos de voluntários da Pl@ntNet, em geral CC BY-SA; créditos por foto nos manifestos e em `data_samples/CREDITOS.csv`.
 
 **Modelos e pesos:** MobileNetV3-Large, ResNet-18 e ConvNeXt-Tiny pré-treinados no ImageNet (torchvision, BSD-3). PaliGemma 2 3B mix 224 (Google, Gemma Terms of Use). Opus-MT `opus-mt-ROMANCE-en` (Apache 2.0) e `opus-mt-tc-big-en-pt` (CC BY 4.0), Helsinki-NLP.
 
