@@ -11,9 +11,9 @@ Identificação de espécies de árvores pela **foto da casca**, pela **foto da 
 
 Estudantes, guardas-parque e equipes de arborização urbana precisam de uma triagem rápida da espécie de uma árvore em campo. A aplicação recebe uma foto e devolve a espécie mais provável **com grau de confiança** e a região da imagem que justificou a resposta. É uma sugestão, não uma identificação botânica definitiva: abaixo de um limiar de confiança o resultado é **"inconclusivo"** e a imagem pode ir para revisão por um biólogo (CRBio) ou engenheiro florestal/agrônomo (CREA).
 
-**Classes (12, europeias, as do TRUNK12):** amieiro (*Alnus glutinosa*), faia (*Fagus sylvatica*), bétula (*Betula pendula*), castanheiro (*Castanea sativa*), ginkgo (*Ginkgo biloba*), carpino (*Carpinus betulus*), castanheiro-da-índia (*Aesculus hippocastanum*), tília (*Tilia* sp.), carvalho (*Quercus* sp.), plátano-oriental (*Platanus orientalis*), pinheiro (*Pinus* sp.), abeto-da-noruega (*Picea abies*).
+**Classes (12, europeias, as do TRUNK12):** amieiro (*Alnus* sp.), faia (*Fagus sylvatica*), bétula (*Betula* sp.), castanheiro (*Castanea sativa*), ginkgo (*Ginkgo biloba*), carpino (*Carpinus betulus*), castanheiro-da-índia (*Aesculus hippocastanum*), tília (*Tilia* sp.), carvalho (*Quercus* sp.), plátano (*Platanus* sp.), pinheiro (*Pinus* sp.), abeto-da-noruega (*Picea abies*).
 
-O TRUNK12 só traz nomes populares em inglês; tília, carvalho e pinheiro ficam no nível de gênero. Nomes conferidos no GBIF e no EPPO em 21/11/2026: ver [docs/auditoria_taxonomica.md](docs/auditoria_taxonomica.md).
+O TRUNK12 só traz nomes populares em inglês; amieiro, bétula, tília, carvalho, plátano e pinheiro ficam no nível de gênero. Nomes conferidos no GBIF e no EPPO em 21/11/2026: ver [docs/auditoria_taxonomica.md](docs/auditoria_taxonomica.md).
 
 ## 2. Funcionalidades
 
@@ -210,10 +210,10 @@ Treino (GPU RTX 4050): de 10 a 15 min por CNN.
 ## 8. Limitações
 
 - **TRUNK12 é padronizado demais:** treinada só nele, a MobileNetV3 acerta 100% no teste do TRUNK12 mas só 30,5% em fotos de campo. O treino com fotos do GBIF elevou o campo para 66,9% (MobileNetV3) e 70,6% (ConvNeXt-Tiny), ainda longe do laboratório.
-- **Ginkgo e plátano-oriental** têm poucas fotos no GBIF (66 e 102 folhas; 5 e 20 cascas), então seus resultados são menos confiáveis.
+- **Ginkgo e plátano** têm poucas fotos no GBIF (66 e 102 folhas; 5 e 20 cascas), então seus resultados são menos confiáveis.
 - **Fusão avaliada com pares de árvores diferentes** da mesma espécie, porque as bases não têm casca e folha da mesma árvore.
 - **12 espécies europeias:** espécies fora da lista recebem a mais parecida; o limiar "inconclusivo" e a revisão manual existem para isso. Espécies brasileiras de arborização ficam como trabalho futuro.
-- **Nomes científicos:** o TRUNK12 não informa as espécies. Tília, carvalho e pinheiro são exibidos só pelo gênero, mas as fotos do GBIF dessas classes foram baixadas como *Tilia cordata*, *Quercus robur* e *Pinus sylvestris*; amieiro, bétula e plátano-oriental também tiveram a espécie suposta (detalhes em `docs/auditoria_taxonomica.md`).
+- **Nomes científicos:** o TRUNK12 não informa as espécies. Seis classes são exibidas só pelo gênero (*Alnus*, *Betula*, *Tilia*, *Quercus*, *Platanus*, *Pinus*), mas as fotos do GBIF de cada uma foram baixadas com uma única espécie (*A. glutinosa*, *B. pendula*, *T. cordata*, *Q. robur*, *P. orientalis*, *P. sylvestris*); outras espécies do mesmo gênero podem ser reconhecidas pior. Detalhes em `docs/auditoria_taxonomica.md`.
 - **Teste do TRUNK12 tem só 59 fotos**, por isso 100% não significa acerto garantido.
 - **PaliGemma** descreve sempre em inglês (a tradução local resolve em parte) e pode alucinar; ver `docs/vlm_protocolo.md`.
 

@@ -12,26 +12,27 @@ SEMENTE = 42
 
 # Pasta do TRUNK12 -> (nome popular em português, nome científico EXIBIDO). A mesma ordem define o índice
 # da classe. Nomes revisados em 21/11/2026 (docs/auditoria_taxonomica.md): o TRUNK12 só traz nomes
-# populares em inglês, por isso tília, carvalho e pinheiro ficam no nível de gênero ("sp.").
+# populares em inglês, por isso amieiro, bétula, tília, carvalho, plátano e pinheiro ficam no nível
+# de gênero ("sp."), por decisão do autor em 21/11.
 ESPECIES = {
-    "alder": ("Amieiro", "Alnus glutinosa"),
+    "alder": ("Amieiro", "Alnus sp."),
     "beech": ("Faia", "Fagus sylvatica"),
-    "birch": ("Bétula", "Betula pendula"),
+    "birch": ("Bétula", "Betula sp."),
     "chestnut": ("Castanheiro", "Castanea sativa"),
     "ginkgo biloba": ("Ginkgo", "Ginkgo biloba"),
     "hornbeam": ("Carpino", "Carpinus betulus"),
     "horse chestnut": ("Castanheiro-da-índia", "Aesculus hippocastanum"),
     "linden": ("Tília", "Tilia sp."),
     "oak": ("Carvalho", "Quercus sp."),
-    "oriental plane": ("Plátano-oriental", "Platanus orientalis"),
+    "oriental plane": ("Plátano", "Platanus sp."),
     "pine": ("Pinheiro", "Pinus sp."),
     "spruce": ("Abeto-da-noruega", "Picea abies"),
 }
 CLASSES = list(ESPECIES)
 
 # Espécie usada na BUSCA do GBIF para baixar as fotos de folha e de casca de campo (não muda os
-# rótulos exibidos). As fotos de tília, carvalho e pinheiro são de Tilia cordata, Quercus robur e
-# Pinus sylvestris, escolhas feitas em 20/11 sem confirmação de que sejam as espécies do TRUNK12.
+# rótulos exibidos). Nas seis classes exibidas como gênero, as fotos do GBIF são de UMA espécie só, a da
+# busca, escolhida em 20/11 sem confirmação de que seja a espécie do TRUNK12.
 TAXON_GBIF = {
     "alder": "Alnus glutinosa", "beech": "Fagus sylvatica", "birch": "Betula pendula",
     "chestnut": "Castanea sativa", "ginkgo biloba": "Ginkgo biloba", "hornbeam": "Carpinus betulus",

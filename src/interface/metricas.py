@@ -41,7 +41,7 @@ def _antes_depois() -> None:
     fmt = {c: "{:.1%}" for c in linhas[0] if c != "Método"}
     st.dataframe(pd.DataFrame(linhas).style.format(fmt, na_rep="–"), hide_index=True, use_container_width=True)
     st.caption(f"Antes: treino só com o TRUNK12 (fotos padronizadas). Depois: TRUNK12 + fotos de casca do GBIF. "
-               f"Teste de campo: {d['n']} fotos do GBIF que nunca entraram no treino. Ginkgo e plátano-oriental "
+               f"Teste de campo: {d['n']} fotos do GBIF que nunca entraram no treino. Ginkgo e plátano "
                "quase não têm fotos de casca no GBIF.")
 
 

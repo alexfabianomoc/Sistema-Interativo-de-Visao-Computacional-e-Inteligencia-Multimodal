@@ -6,16 +6,16 @@ Data da consulta: 21/11/2026. Revisão pedida pelo autor (roteiro "Revisão e va
 
 | Pasta | Nome popular revisado | Nome científico | Nível de identificação | Fonte |
 |---|---|---|---|---|
-| alder | Amieiro | *Alnus glutinosa* | Espécie confirmada (nome); ver conflito 1 | GBIF, EPPO |
+| alder | Amieiro | *Alnus* sp. | Gênero confirmado, espécie não determinada | GBIF, EPPO |
 | beech | Faia | *Fagus sylvatica* | Espécie confirmada | GBIF, EPPO |
-| birch | Bétula | *Betula pendula* | Espécie confirmada (nome); ver conflito 1 | GBIF, EPPO |
+| birch | Bétula | *Betula* sp. | Gênero confirmado, espécie não determinada | GBIF, EPPO |
 | chestnut | Castanheiro | *Castanea sativa* | Espécie confirmada | GBIF, EPPO |
 | ginkgo biloba | Ginkgo | *Ginkgo biloba* | Espécie confirmada | GBIF, EPPO; nome científico já está na pasta |
 | hornbeam | Carpino | *Carpinus betulus* | Espécie confirmada | GBIF, EPPO |
 | horse chestnut | Castanheiro-da-índia | *Aesculus hippocastanum* | Espécie confirmada | GBIF, EPPO |
 | linden | Tília | *Tilia* sp. | Gênero confirmado, espécie não determinada | GBIF, EPPO |
 | oak | Carvalho | *Quercus* sp. | Gênero confirmado, espécie não determinada | GBIF, EPPO |
-| oriental plane | Plátano-oriental | *Platanus orientalis* | Espécie confirmada (nome); ver conflito 1 | GBIF, EPPO |
+| oriental plane | Plátano | *Platanus* sp. | Gênero confirmado, espécie não determinada | GBIF, EPPO |
 | pine | Pinheiro | *Pinus* sp. | Gênero confirmado, espécie não determinada | GBIF, EPPO |
 | spruce | Abeto-da-noruega | *Picea abies* | Espécie confirmada | GBIF, EPPO |
 
@@ -26,9 +26,9 @@ Data da consulta: 21/11/2026. Revisão pedida pelo autor (roteiro "Revisão e va
 | Item | Quantidade |
 |---|---|
 | Registros examinados | 12 |
-| Nomes científicos de espécie aceitos (GBIF e EPPO) | 9 |
-| Identificações limitadas ao gênero | 3 (*Tilia*, *Quercus*, *Pinus*) |
-| Nomes populares ajustados | 1 (spruce: "Abeto" no código → "Abeto-da-noruega") |
+| Espécies confirmadas | 6 |
+| Identificações limitadas ao gênero | 6 (*Alnus*, *Betula*, *Tilia*, *Quercus*, *Platanus*, *Pinus*) |
+| Nomes populares ajustados | 2 (spruce: "Abeto" → "Abeto-da-noruega"; oriental plane: "Plátano-oriental" → "Plátano", nome do gênero) |
 | Divergências encontradas | 4 (ver seção B e Conflitos) |
 
 ## B. Análise individual
@@ -50,14 +50,14 @@ Data da consulta: 21/11/2026. Revisão pedida pelo autor (roteiro "Revisão e va
 
 Observação: a tabela do roteiro trazia "Abeto-vermelho" para spruce, mas o código usava "Abeto". Nenhuma das fontes consultadas traz "abeto-vermelho" para *Picea abies*.
 
-## Conflitos para decisão do autor
+## Decisões do autor (21/11/2026)
 
-1. **Amieiro, bétula e plátano-oriental.** O roteiro (seção 3.1) manda preservar *Alnus glutinosa*, *Betula pendula* e *Platanus orientalis* como espécies. Os nomes são aceitos nas bases, mas a espécie foi **suposta em 20/11**, porque o TRUNK12 só traz os nomes em inglês: "alder" pode ser *A. incana*, "birch" pode ser *B. pubescens*, e plátanos plantados na Europa costumam ser o híbrido. Mantive como o roteiro pede, mas o mesmo raciocínio que levou tília, carvalho e pinheiro ao gênero valeria para essas três.
-2. **Fotos do GBIF continuam com a espécie da busca.** As fotos de folha e de casca de campo foram baixadas como *Tilia cordata*, *Quercus robur* e *Pinus sylvestris* (e *Alnus glutinosa*, *Betula pendula*, *Platanus orientalis*). Os modelos foram treinados com elas. O rótulo exibido passou a ser o gênero, mas o conteúdo dessas classes é de uma única espécie. Essa espécie da busca fica registrada em `src/metrics/dados.py` (`TAXON_GBIF`) e nos manifestos.
+1. **Amieiro, bétula e plátano passam ao gênero.** O roteiro original mandava preservar *Alnus glutinosa*, *Betula pendula* e *Platanus orientalis*, mas a espécie dessas três também tinha sido suposta em 20/11 (o TRUNK12 só traz "alder", "birch" e "oriental plane"; "alder" pode ser *A. incana*, "birch" pode ser *B. pubescens*, e o EPPO registra o plátano híbrido como muito plantado na Europa). Consultado, o autor escolheu "a opção menos precisa e garantida": *Alnus* sp., *Betula* sp. e *Platanus* sp. O nome popular do plátano passou a "Plátano", nome do gênero (GBIF: "plátano"). A análise individual da seção B continua válida para os nomes de espécie consultados.
+2. **Fotos do GBIF continuam com a espécie da busca.** Nas seis classes exibidas como gênero, as fotos de folha e de casca de campo foram baixadas com UMA espécie: *Alnus glutinosa*, *Betula pendula*, *Tilia cordata*, *Quercus robur*, *Platanus orientalis* e *Pinus sylvestris*. Os modelos foram treinados com elas. O rótulo exibido é o gênero, mas o conteúdo de cada classe representa só essa espécie, e outras espécies do mesmo gênero podem ser classificadas pior. A espécie da busca fica em `src/metrics/dados.py` (`TAXON_GBIF`) e nos manifestos.
 
 ## C. Pendências
 
-- Confirmar com o autor do TRUNK12 (contato na página do ViCoS) as espécies de linden, oak, pine, alder, birch e oriental plane.
+- Confirmar com o autor do TRUNK12 (contato na página do ViCoS) as espécies de alder, birch, linden, oak, oriental plane e pine; se confirmadas, o nome volta ao nível de espécie.
 - Consultar o Plants of the World Online (Kew): **não foi possível**. A página e a API responderam com uma verificação anti-robô ("Executando verificação de segurança", HTTP 403) em 21/11/2026. Nenhum dado do POWO está neste relatório. O autor pode abrir os links abaixo no navegador e conferir.
 - Ministério da Agricultura e Pecuária: **não consultado**; não localizei uma página do MAPA com nomes populares dessas espécies europeias.
 - Pl@ntNet: **não consultado para nomes**. As fotos do projeto vêm do conjunto "Pl@ntNet observations" via GBIF, mas isso não confirma nomenclatura.
@@ -104,7 +104,7 @@ Observação: a tabela do roteiro trazia "Abeto-vermelho" para spruce, mas o có
 
 ## Arquivos alterados nesta revisão
 
-- `src/metrics/dados.py`: nomes exibidos (*Tilia* sp., *Quercus* sp., *Pinus* sp., Abeto-da-noruega) e novo `TAXON_GBIF` com a espécie usada na busca.
+- `src/metrics/dados.py`: nomes exibidos (*Alnus* sp., *Betula* sp., *Tilia* sp., *Quercus* sp., *Platanus* sp., *Pinus* sp., Abeto-da-noruega, Plátano) e novo `TAXON_GBIF` com a espécie usada na busca.
 - `scripts/preparar_dados.py`: comentário apontando a origem dos nomes da busca.
 - `scripts/avaliar_bioclip.py`: os textos do BioCLIP passam a usar `TAXON_GBIF`, o que mantém o resultado já publicado.
 - `README.md`, `docs/proposta.md`, `docs/galeria.md`: nomes atualizados e limitação declarada.

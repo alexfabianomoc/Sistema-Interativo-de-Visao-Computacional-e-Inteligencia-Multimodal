@@ -23,10 +23,10 @@ Estudantes, guardas-parque e equipes de arborização urbana que precisam de uma
 
 | Modo | Base | Espécies | Imagens |
 |------|------|----------|---------|
-| Casca | TRUNK12 | 12 árvores europeias (amieiro, faia, bétula, castanheiro, ginkgo, carpino, castanheiro-da-índia, tília, carvalho, plátano-oriental, pinheiro, abeto-da-noruega; tília, carvalho e pinheiro só no nível de gênero, ver docs/auditoria_taxonomica.md) | 393 fotos padronizadas do tronco (3000×4000, mesma câmera, a 20 cm) |
+| Casca | TRUNK12 | 12 árvores europeias (amieiro, faia, bétula, castanheiro, ginkgo, carpino, castanheiro-da-índia, tília, carvalho, plátano, pinheiro, abeto-da-noruega; amieiro, bétula, tília, carvalho, plátano e pinheiro só no nível de gênero, ver docs/auditoria_taxonomica.md) | 393 fotos padronizadas do tronco (3000×4000, mesma câmera, a 20 cm) |
 | Folha | GBIF, conjunto "Pl@ntNet observations" | as mesmas 12 espécies do TRUNK12 | até 500 fotos de folha por espécie, 600 px |
 
-**Escolha das bases (20/11):** a base inicialmente prevista para o modo folha, a Pl@ntNet-300K, não tem nenhuma espécie em comum com o TRUNK12 (1.081 espécies, quase todas ervas e flores). Também foi avaliada a Forest Species Database macroscópica da UFPR, descartada por mostrar o corte da madeira e não a casca da árvore em pé. A solução foi o conjunto "Pl@ntNet observations" do GBIF, que marca o órgão de cada foto: assim o modo folha usa as mesmas 12 espécies do modo casca, o que permite o **uso combinado casca + folha** (fusão tardia: produto das probabilidades dos dois modelos). Ginkgo e plátano-oriental têm poucas fotos de folha (cerca de 70 e 100), o que é tratado com pesos por classe no treino e F1 macro na avaliação.
+**Escolha das bases (20/11):** a base inicialmente prevista para o modo folha, a Pl@ntNet-300K, não tem nenhuma espécie em comum com o TRUNK12 (1.081 espécies, quase todas ervas e flores). Também foi avaliada a Forest Species Database macroscópica da UFPR, descartada por mostrar o corte da madeira e não a casca da árvore em pé. A solução foi o conjunto "Pl@ntNet observations" do GBIF, que marca o órgão de cada foto: assim o modo folha usa as mesmas 12 espécies do modo casca, o que permite o **uso combinado casca + folha** (fusão tardia: produto das probabilidades dos dois modelos). Ginkgo e plátano têm poucas fotos de folha (cerca de 70 e 100), o que é tratado com pesos por classe no treino e F1 macro na avaliação.
 ## Saída
 
 - Espécie prevista com top-3 e confiança.
