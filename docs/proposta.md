@@ -24,12 +24,9 @@ Estudantes, guardas-parque e equipes de arborização urbana que precisam de uma
 | Modo | Base | Espécies | Imagens |
 |------|------|----------|---------|
 | Casca | TRUNK12 | 12 árvores europeias (amieiro, faia, bétula, castanheiro, ginkgo, carpino, castanheiro-da-índia, tília, carvalho, plátano-oriental, pinheiro, abeto) | 393 fotos padronizadas do tronco |
-| Folha ou planta | Pl@ntNet-300K (amostra) | 10 árvores e arvoretas (lista abaixo) | até 500 por espécie, cerca de 3.900 no total |
+| Folha | GBIF, conjunto "Pl@ntNet observations" | as mesmas 12 espécies do TRUNK12 | até 500 fotos de folha por espécie, 600 px |
 
-Espécies do modo folha ou planta (fotos disponíveis na base): *Punica granatum* (3.514), *Liriodendron tulipifera* (2.627), *Acacia dealbata* (1.285), *Schefflera actinophylla* (944, dois identificadores unidos), *Hippophae rhamnoides* (526), *Metasequoia glyptostroboides* (514), *Acacia retinodes* (325), *Casuarina cunninghamiana* (305), *Morinda citrifolia* (274), *Couroupita guianensis* (251).
-
-**Achado da inspeção das bases (20/11):** as duas bases não têm nenhuma espécie em comum. A Pl@ntNet-300K tem 1.081 espécies, quase todas ervas e flores, e nenhum dos 12 gêneros do TRUNK12 (nem *Acer*, *Fraxinus*, *Prunus* e outros comuns). Por isso o uso combinado casca + folha, previsto no plano, sai da entrega, e os dois modos funcionam de forma independente. O modo folha fica desbalanceado (de 251 a 500 fotos), o que é tratado com pesos por classe no treino e F1 macro na avaliação.
-
+**Escolha das bases (20/11):** a base inicialmente prevista para o modo folha, a Pl@ntNet-300K, não tem nenhuma espécie em comum com o TRUNK12 (1.081 espécies, quase todas ervas e flores). Também foi avaliada a Forest Species Database macroscópica da UFPR, descartada por mostrar o corte da madeira e não a casca da árvore em pé. A solução foi o conjunto "Pl@ntNet observations" do GBIF, que marca o órgão de cada foto: assim o modo folha usa as mesmas 12 espécies do modo casca, o que permite o **uso combinado casca + folha** (fusão tardia: produto das probabilidades dos dois modelos). Ginkgo e plátano-oriental têm poucas fotos de folha (cerca de 70 e 100), o que é tratado com pesos por classe no treino e F1 macro na avaliação.
 ## Saída
 
 - Espécie prevista com top-3 e confiança.
@@ -55,5 +52,5 @@ Python 3.11, PyTorch 2.6 + CUDA 12.4 (testado na RTX 4050 Laptop 6 GB em 20/11),
 
 ## Licenças das bases
 
-- **Pl@ntNet-300K:** pacote CC BY 4.0; cada foto tem licença própria nos metadados (99,8% CC BY-SA, o restante CC BY-NC ou BY-NC-SA). O autor de cada foto usada é registrado em `data/plantnet/manifesto.csv` e creditado no README.
+- **GBIF / Pl@ntNet observations:** conjunto publicado em CC BY 4.0; cada foto tem licença própria (em geral CC BY-SA) e autor. Autor, licença e link de cada foto usada ficam em `data/folhas/manifesto.csv` e são creditados no README.
 - **TRUNK12:** licença a confirmar. Nenhuma base é versionada no repositório.
